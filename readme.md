@@ -1,11 +1,17 @@
+![](img/pic.jpg)
+
 # Soil moisture sensor [[demo](https://basil-sayanee.rhcloud.com/) and [api](https://basil-sayanee.rhcloud.com/api)]
 
 > Monitoring soil moisture sensor of a basil plant to remind the owner to water it!
 
 ## Quick start
 
-1. Install packages `npm i`
-- Set the environment variables `cp .env.sample .env`
+1. Wire up the [soil moisture sensor](http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor) with [Particle Photon](https://store.particle.io/collections/photon) and flash it with the [firmware](firmware)
+1. Install packages and set environment variables
+  ```sh
+  npm i
+  cp .env.sample .env # set the device id and access token for the Particle Photon
+  ```
 - Start the web server `npm start`
 
 ## Research
