@@ -4,6 +4,7 @@
   "description": "notify when the basil plant needs water",
   "main": "index.js",
   "scripts": {
+    "deploy": "git push production master",
     "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
