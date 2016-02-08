@@ -1,8 +1,11 @@
 # Soil moisture sensor
 
+> Monitoring soil moisture sensor of a basil plant to remind the owner to water it!
+
 ## Quick start
 
 1. Install packages `npm i`
+- Set the environment variables `cp .env.sample .env`
 - Start the web server `npm start`
 
 ## Research
