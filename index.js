@@ -11,7 +11,7 @@ var server = app.listen(port, ip, function () {
 var io = require('socket.io').listen(server)
 var request = require('request')
 var config = require('./config')
-var data = [];
+var dataStore = [];
 var sockets = [];
 
 var channelName = 'basil'
@@ -34,7 +34,7 @@ function query(newClient) {
 
     console.log(newClient === true ? message + ' New client found!' : message)
 
-    data.push({
+    dataStore.push({
       data: result,
       date: new Date()
     })
@@ -54,7 +54,12 @@ app.get('/api', function(req, res){
 
 io.on('connection', function (socket) {
   sockets.push(socket)
-  query(true)
+  var lastData;
+
+  if (dataStore.length > 0) {
+    lastData = dataStore[ dataStore.length - 1 ].data
+    socket.emit(channelName, lastData)
+  }
 });
 
 query()
