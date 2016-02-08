@@ -48,7 +48,7 @@ function query(newClient) {
 app.use(express.static('public'))
 app.get('/api', function(req, res){
   res.json({
-    basil: data
+    basil: dataStore
   });
 })
 
