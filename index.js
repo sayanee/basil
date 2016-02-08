@@ -21,7 +21,7 @@ function url() {
   return channel.baseUrl + process.env.DEVICE_ID + channel.variableName + '?access_token=' + process.env.ACCESS_TOKEN
 }
 
-function query() {
+function query(newClient) {
   request({
     uri: url(),
     method: 'GET'
@@ -30,7 +30,10 @@ function query() {
   }).on('data', function (chunk) {
     var textChunk = chunk.toString('utf8');
     var result = JSON.parse(textChunk).result
-    console.log(result + ' at ' + new Date())
+    var message = result + ' at ' + new Date()
+
+    console.log(newClient === true ? message + ' New client found!' : message)
+
     data.push({
       data: result,
       date: new Date()
@@ -51,7 +54,7 @@ app.get('/api', function(req, res){
 
 io.on('connection', function (socket) {
   sockets.push(socket)
-  query()
+  query(true)
 });
 
 query()
