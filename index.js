@@ -51,6 +51,7 @@ app.get('/api', function(req, res){
 
 io.on('connection', function (socket) {
   sockets.push(socket)
+  query()
 });
 
 query()
