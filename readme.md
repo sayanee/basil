@@ -1,4 +1,4 @@
-# Soil moisture sensor
+# Soil moisture sensor [[demo](https://basil-sayanee.rhcloud.com/) and [api](https://basil-sayanee.rhcloud.com/api)]
 
 > Monitoring soil moisture sensor of a basil plant to remind the owner to water it!
 
