@@ -8,6 +8,20 @@
     margin: 2em;
   }
 
+  h1 small {
+    font-size: .6em;
+  }
+
+  h1 small a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color .4s ease-out;
+  }
+
+  h1 small a:hover, h1 small a:active {
+    color: cornflowerblue;
+  }
+
   .list {
     padding: 0;
     list-style-type: none;
@@ -39,7 +53,7 @@
   }
 </style>
 
-<h1>Hello, I'm a Basil plant</h1>
+<h1>Hello, I'm a Basil plant <br><small><a href="https://github.com/sayanee/cosmic">docs and code</a></small></h1>
 
 <ul class="list" id="list"></ul>
 
