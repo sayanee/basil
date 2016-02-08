@@ -1,12 +1,12 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-let port = env.OPENSHIFT_NODE4_PORT || 1337;
-let ip = env.OPENSHIFT_NODE4_IP || '127.0.0.1';
+var port = process.env.OPENSHIFT_NODE4_PORT || 1337
+var ip = process.env.OPENSHIFT_NODE4_IP || '127.0.0.1'
 var express = require('express')
 var app = express()
 var server = app.listen(port, ip, function () {
-  console.log('App running on 3000');
+  console.log('App running on ' + port);
 });
 var io = require('socket.io').listen(server)
 var request = require('request')
