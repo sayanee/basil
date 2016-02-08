@@ -1,0 +1,11 @@
+{
+  "name": "openshift-node4",
+  "version": "0.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "forever app.js"
+  },
+  "author": "",
+  "license": ""
+}
