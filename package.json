@@ -6,6 +6,7 @@
   "scripts": {
     "deploy": "git push production master",
     "start": "node index",
+    "log": "rhc tail -o '-n 200' -a basil",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
