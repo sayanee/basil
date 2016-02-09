@@ -1,80 +1,51 @@
-<style>
-  body {
-    font-family: Georgia;
-  }
-
-  h1 {
-    text-align: center;
-    margin: 2em;
-  }
-
-  h1 small {
-    font-size: .6em;
-  }
-
-  h1 small a {
-    color: #aaa;
-    text-decoration: none;
-    transition: color .4s ease-out;
-  }
-
-  h1 small a:hover, h1 small a:active {
-    color: cornflowerblue;
-  }
-
-  .list {
-    padding: 0;
-    list-style-type: none;
-  }
-
-  .list li {
-    padding: 1em;
-    background: aliceblue;
-    margin: 2em;
-    border: 2px solid wheat;
-    border-radius: 5px;
-    position: relative;
-    transition: all 1s ease-out;
-    opacity: 0;
-  }
-
-  .list li.show {
-    opacity: 1;
-  }
-
-  .list li span {
-    text-align: right;
-    font-size: .8em;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: wheat;
-    padding: .3em .5em;
-  }
-</style>
-
-<h1>Hello, I'm a Basil plant <br><small><a href="https://github.com/sayanee/cosmic">docs and code</a></small></h1>
-
-<ul class="list" id="list"></ul>
-
-<script src="moment.js"></script>
-<script src="socket.js"></script>
-<script>
-  var list = document.getElementById('list')
-  var socket = io.connect()
-  socket.on('basil', function(data) {
-    var entry = document.createElement('li');
-    var text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(new Date()).format('MMM D, h:mm a') + '</span>'
-
-    if (parseInt(data) < 1000) {
-      entry.innerHTML = 'Please water me! ' + text;
-    } else {
-      entry.innerHTML = text;
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Hello, I'm a Basil plant</title>
+  <meta name="description" content="Soil moisture monitoring and notification">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Georgia; }
+    h1 { text-align: center; margin: 2em; }
+    h1 small { font-size: .6em; }
+    h1 small a { color: #aaa; text-decoration: none; transition: color .4s ease-out; }
+    h1 small a:hover, h1 small a:active { color: cornflowerblue; }
+    .list { padding: 0; list-style-type: none; }
+    .list li { padding: 1em; background: aliceblue; margin: 2em; border: 2px solid wheat; border-radius: 5px; position: relative; transition: all 1s ease-out; opacity: 0; }
+    .list li.show { opacity: 1; }
+    .list li span { text-align: right; font-size: .8em; position: absolute; bottom: 0; right: 0; background: wheat; padding: .3em .5em; }
+    @media only screen and (max-width: 600px){
+      .list li { margin: .1em;}
     }
+  </style>
+</head>
+<body>
+  <h1>Hello, I'm a Basil plant <br><small><a href="https://github.com/sayanee/cosmic">docs and code</a></small></h1>
 
-    list.insertBefore(entry, list.firstChild);
-    setTimeout(function() {
-      entry.className = entry.className + ' show';
-    }, 10);
-  });
-</script>
+  <ul class="list" id="list"></ul>
+
+  <script src="moment.js"></script>
+  <script src="socket.js"></script>
+  <script>
+    var list = document.getElementById('list')
+    var socket = io.connect()
+    socket.on('basil', function(data) {
+      var entry = document.createElement('li');
+      var text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(new Date()).format('MMM D, h:mm a') + '</span>'
+
+      if (parseInt(data) < 1000) {
+        entry.innerHTML = 'Please water me! ' + text;
+      } else {
+        entry.innerHTML = text;
+      }
+
+      list.insertBefore(entry, list.firstChild);
+      setTimeout(function() {
+        entry.className = entry.className + ' show';
+      }, 10);
+    });
+  </script>
+</body>
+</html>
