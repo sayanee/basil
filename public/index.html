@@ -29,13 +29,11 @@
   <script src="moment.js"></script>
   <script src="socket.js"></script>
   <script>
-    var list = document.getElementById('list')
-    var socket = io.connect()
-    socket.on('basil', function(data) {
+    function addListItem(data, date) {
       var entry = document.createElement('li');
-      var text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(new Date()).format('MMM D, h:mm a') + '</span>'
+      var text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(date).format('MMM D, h:mm a') + '</span>'
 
-      if (parseInt(data) < 1000) {
+      if (parseInt(data) < 2000) {
         entry.innerHTML = 'Please water me! ' + text;
       } else {
         entry.innerHTML = text;
@@ -45,6 +43,19 @@
       setTimeout(function() {
         entry.className = entry.className + ' show';
       }, 10);
+    }
+
+    var list = document.getElementById('list')
+    var socket = io.connect()
+
+    socket.on('list', function(dataList) {
+      dataList.forEach(function(eachData) {
+        addListItem(eachData.data, eachData.date)
+      })
+    })
+
+    socket.on('basil', function(data) {
+      addListItem(data, new Date())
     });
   </script>
 </body>

@@ -54,11 +54,9 @@ app.get('/api', function(req, res){
 
 io.on('connection', function (socket) {
   sockets.push(socket)
-  var lastData;
 
   if (dataStore.length > 0) {
-    lastData = dataStore[ dataStore.length - 1 ].data
-    socket.emit(channelName, lastData)
+    socket.emit('list', dataStore)
   }
 });
 
