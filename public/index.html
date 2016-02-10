@@ -31,7 +31,13 @@
   <script>
     function addListItem(data, date) {
       var entry = document.createElement('li');
-      var text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(date).format('MMM D, h:mm a') + '</span>'
+      var text = ''
+
+      if (data) {
+        text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(date).format('MMM D, h:mm a') + '</span>'
+      } else {
+        text = 'Oops! Looks like I am not connected to the Internet. You want to check that?'
+      }
 
       if (parseInt(data) < 2000) {
         entry.innerHTML = 'Please water me! ' + text;
