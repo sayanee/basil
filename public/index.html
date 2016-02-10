@@ -29,26 +29,33 @@
   <script src="moment.js"></script>
   <script src="socket.js"></script>
   <script>
-    function addListItem(data, date) {
+    function addListItem(data, date, status) {
       var entry = document.createElement('li');
-      var text = ''
-
-      if (data) {
-        text = 'My soil moisture is <strong>' + data + '</strong> <span>' + moment(date).format('MMM D, h:mm a') + '</span>'
-      } else {
-        text = 'Oops! Looks like I am not connected to the Internet. You want to check that?'
-      }
-
-      if (parseInt(data) < 2000) {
-        entry.innerHTML = 'Please water me! ' + text;
-      } else {
-        entry.innerHTML = text;
-      }
+      entry.innerHTML = setMessage(data, date, status)
 
       list.insertBefore(entry, list.firstChild);
       setTimeout(function() {
         entry.className = entry.className + ' show';
       }, 10);
+    }
+
+    function setMessage(data, date, status) {
+      var message = 'My soil moisture is <strong>' + data + '</strong>'
+      var dateMessage = '<span>' + moment(date).format('MMM D, h:mm a') + '</span>'
+
+      if (!data) {
+        return 'Oops! Looks like I am not connected to the Internet. You want to check?' + dateMessage
+      }
+
+      if (status === 'trigger') {
+        return 'Please water me! My soil moisture is below <em>2500</em> at <strong>' + data + '</strong>' + dateMessage
+      }
+
+      if (status === 'done') {
+        return 'Yay! I have been watered. ' + message + dateMessage
+      }
+
+      return message + dateMessage
     }
 
     var list = document.getElementById('list')
@@ -62,6 +69,14 @@
 
     socket.on('basil', function(data) {
       addListItem(data, new Date())
+    });
+
+    socket.on('done', function(data) {
+      addListItem(data, new Date(), 'done')
+    });
+
+    socket.on('trigger', function(data) {
+      addListItem(data, new Date(), 'trigger')
     });
   </script>
 </body>

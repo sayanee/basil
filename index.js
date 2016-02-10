@@ -29,18 +29,27 @@ function query(newClient) {
     console.log(err)
   }).on('data', function (chunk) {
     var textChunk = chunk.toString('utf8');
-    var result = JSON.parse(textChunk).result
-    var message = result + ' at ' + new Date()
+    var currResult = JSON.parse(textChunk).result
+    var prevResult = dataStore.length > 0 ? dataStore[ dataStore.length - 1 ].data : 0
+    var message = currResult + ' at ' + new Date()
 
     console.log(newClient === true ? message + ' New client found!' : message)
 
-    dataStore.push({
-      data: result,
-      date: new Date()
+    sockets.forEach(function(eachSocket) {
+      if (parseInt(currResult) - parseInt(prevResult) > channel.change) {
+        eachSocket.emit('done', currResult)
+      } else {
+        if (parseInt(currResult) < channel.trigger) {
+          eachSocket.emit('trigger', currResult)
+        } else {
+          eachSocket.emit(channelName, currResult)
+        }
+      }
     })
 
-    sockets.forEach(function(eachSocket) {
-      eachSocket.emit(channelName, result)
+    dataStore.push({
+      data: currResult,
+      date: new Date()
     })
   })
 }
