@@ -1,6 +1,6 @@
 ![](img/pic.jpg)
 
-# Soil moisture sensor [[demo](https://basil-sayanee.rhcloud.com/) and [api](https://basil-sayanee.rhcloud.com/api)]
+# Soil moisture sensor [[demo](http://basil.sayan.ee) and [api](http://basil.sayan.ee/api)]
 
 > Monitoring soil moisture sensor of a basil plant to remind the owner to water it!
 
@@ -14,6 +14,8 @@
   cp .env.sample .env # set the device id and access token for the Particle Photon
   ```
 - Start the web server `npm start`
+
+  ![](img/web.png)
 
 ## Research
 
