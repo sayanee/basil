@@ -69,12 +69,10 @@
       config = data.config
 
       return dataStore.forEach(function(eachData, index) {
-        if (index > 0) {
-          if (eachData.data - dataStore[ index - 1 ].data > config.change) {
-            addListItem(parseInt(eachData.data), eachData.date, 'changed')
-          } else {
-            addListItem(parseInt(eachData.data), eachData.date)
-          }
+        if (index > 0 && (eachData.data - dataStore[ index - 1 ].data > config.change)) {
+          addListItem(parseInt(eachData.data), eachData.date, 'changed')
+        } else {
+          addListItem(parseInt(eachData.data), eachData.date)
         }
       })
     })
