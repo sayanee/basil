@@ -47,36 +47,40 @@
         return 'Oops! Looks like I am not connected to the Internet. You want to check?' + dateMessage
       }
 
-      if (status === 'trigger') {
+      if (data < config.trigger) {
         return 'Please water me! My soil moisture is below <em>2500</em> at <strong>' + data + '</strong>' + dateMessage
       }
 
-      if (status === 'done') {
+      if (status === 'changed') {
         return 'Yay! I have been watered. ' + message + dateMessage
       }
 
       return message + dateMessage
     }
 
+    var channel = 'basil'
     var list = document.getElementById('list')
     var socket = io.connect()
+    var dataStore = []
+    var config = {}
 
-    socket.on('list', function(dataList) {
-      dataList.forEach(function(eachData) {
-        addListItem(eachData.data, eachData.date)
+    socket.on('init', function(data) {
+      dataStore = data[ channel ]
+      config = data.config
+
+      return dataStore.forEach(function(eachData, index) {
+        if (index > 0) {
+          if (eachData.data - dataStore[ index - 1 ].data > config.change) {
+            addListItem(parseInt(eachData.data), eachData.date, 'changed')
+          } else {
+            addListItem(parseInt(eachData.data), eachData.date)
+          }
+        }
       })
     })
 
-    socket.on('basil', function(data) {
+    socket.on(channel, function(data) {
       addListItem(data, new Date())
-    });
-
-    socket.on('done', function(data) {
-      addListItem(data, new Date(), 'done')
-    });
-
-    socket.on('trigger', function(data) {
-      addListItem(data, new Date(), 'trigger')
     });
   </script>
 </body>

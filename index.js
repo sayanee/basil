@@ -36,15 +36,7 @@ function query(newClient) {
     console.log(newClient === true ? message + ' New client found!' : message)
 
     sockets.forEach(function(eachSocket) {
-      if (parseInt(currResult) - parseInt(prevResult) > channel.change) {
-        eachSocket.emit('done', currResult)
-      } else {
-        if (parseInt(currResult) < channel.trigger) {
-          eachSocket.emit('trigger', currResult)
-        } else {
-          eachSocket.emit(channelName, currResult)
-        }
-      }
+      eachSocket.emit(channelName, currResult)
     })
 
     dataStore.push({
@@ -57,6 +49,10 @@ function query(newClient) {
 app.use(express.static('public'))
 app.get('/api', function(req, res){
   res.json({
+    config: {
+      trigger: config[ channelName ].trigger,
+      change: config[ channelName ].change
+    },
     basil: dataStore
   });
 })
@@ -65,7 +61,13 @@ io.on('connection', function (socket) {
   sockets.push(socket)
 
   if (dataStore.length > 0) {
-    socket.emit('list', dataStore)
+    socket.emit('init', {
+      config: {
+        trigger: config[ channelName ].trigger,
+        change: config[ channelName ].change
+      },
+      basil: dataStore
+    })
   }
 });
 
