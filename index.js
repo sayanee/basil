@@ -1,18 +1,20 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+var logger = require('tracer').colorConsole()
 var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
 var server = app.listen(port, ip, function () {
-  console.log('App running on ' + port);
-});
+  console.log('App running on ' + port)
+})
 var io = require('socket.io').listen(server)
 var request = require('request')
 var config = require('./config')
-var dataStore = [];
-var sockets = [];
+var dataStore = []
+var sockets = []
 
 var channelName = 'basil'
 var channel = config[ channelName ]
@@ -28,8 +30,17 @@ function query(newClient) {
   }).on('error', function(err) {
     console.log(err)
   }).on('data', function (chunk) {
-    var textChunk = chunk.toString('utf8');
-    var currResult = JSON.parse(textChunk).result
+    var textChunk = chunk.toString('utf8')
+    var currResult
+
+    if (textChunk) {
+      try {
+        currResult = JSON.parse(textChunk).result
+      } catch(error) {
+        logger.error(error)
+      }
+    }
+
     var prevResult = dataStore.length > 0 ? dataStore[ dataStore.length - 1 ].data : 0
     var message = currResult + ' at ' + new Date()
 
@@ -54,7 +65,7 @@ app.get('/api', function(req, res){
       change: config[ channelName ].change
     },
     basil: dataStore
-  });
+  })
 })
 
 io.on('connection', function (socket) {
@@ -69,7 +80,7 @@ io.on('connection', function (socket) {
       basil: dataStore
     })
   }
-});
+})
 
 query()
 setInterval(function() {
