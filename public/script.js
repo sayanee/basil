@@ -28,6 +28,18 @@ function setMessage(data, date, status) {
   return message + dateMessage
 }
 
+function getLastDefinedValue(currentIndex, array) {
+  let trackIndex = currentIndex
+  let definedValue
+
+  while (trackIndex > 0 && !definedValue) {
+    trackIndex--
+    definedValue = array[ trackIndex ].data
+  }
+
+  return definedValue
+}
+
 var channel = 'basil'
 var list = document.getElementById('list')
 var socket = io.connect()
@@ -39,7 +51,7 @@ socket.on('init', function(data) {
   config = data.config
 
   return dataStore.forEach(function(eachData, index) {
-    if (index > 0 && (eachData.data - dataStore[ index - 1 ].data > config.change)) {
+    if (index > 0 && (eachData.data - getLastDefinedValue(index, dataStore) > config.change)) {
       addListItem(parseInt(eachData.data), eachData.date, 'changed')
     } else {
       addListItem(parseInt(eachData.data), eachData.date)
