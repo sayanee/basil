@@ -3,7 +3,7 @@ module.exports = {
     "baseUrl": 'https://api.particle.io/v1/devices/',
     "variableName": "/moisture/",
     "trigger": 2500,
-    "change": 1000,
+    "change": 500,
     "interval": 7200000 // 2 hour
   }
 }
