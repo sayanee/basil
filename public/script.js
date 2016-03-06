@@ -4,7 +4,7 @@ function addListItem(data, date, status) {
 
   list.insertBefore(entry, list.firstChild);
   setTimeout(function() {
-    entry.className = entry.className + ' show';
+    entry.className = entry.className + ' show ' + setIndicatorLevel(data, status);
   }, 10);
 }
 
@@ -26,6 +26,13 @@ function setMessage(data, date, status) {
   }
 
   return message + dateMessage
+}
+
+function setIndicatorLevel(data, status) {
+  if (!data) return 'warn'
+  if (data < config.trigger) return 'info'
+  if (status === 'changed') return 'success'
+  return ''
 }
 
 function getLastDefinedValue(currentIndex, array) {
