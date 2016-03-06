@@ -40,7 +40,8 @@
     }
 
     function setMessage(data, date, status) {
-      var message = 'My soil moisture is <strong>' + data + '</strong>'
+      var normData = Math.round((data + 1) / 4096 * 100)
+      var message = 'My soil moisture is <strong>' + normData + '%</strong>'
       var dateMessage = '<span>' + moment(date).format('MMM D, h:mm a') + '</span>'
 
       if (!data) {
