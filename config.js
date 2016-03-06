@@ -4,6 +4,6 @@ module.exports = {
     "variableName": "/moisture/",
     "trigger": 2500,
     "change": 500,
-    "interval": 7200000 // 2 hour
+    "interval": 7200000 // every 2 hours
   }
 }

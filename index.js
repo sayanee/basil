@@ -19,6 +19,10 @@ var sockets = []
 var channelName = 'basil'
 var channel = config[ channelName ]
 
+if (process.env.NODE_ENV !== 'production') {
+  channel.interval = 5000
+}
+
 function url() {
   return channel.baseUrl + process.env.DEVICE_ID + channel.variableName + '?access_token=' + process.env.ACCESS_TOKEN
 }
