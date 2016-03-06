@@ -67,5 +67,5 @@ socket.on('init', function(data) {
 })
 
 socket.on(channel, function(data) {
-  addListItem(data, new Date())
+  // addListItem(data, new Date())
 });
