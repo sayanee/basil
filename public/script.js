@@ -1,37 +1,34 @@
-function addListItem(data, date, status) {
-  var entry = document.createElement('li');
-  entry.innerHTML = setMessage(data, date, status)
+function format1DecPlace(floatValue) {
+  return Math.round(floatValue * 10) / 10
+}
 
-  list.insertBefore(entry, list.firstChild);
+function addStatus(currentData, meta) {
+  var status = document.getElementById('status')
+  status.innerHTML = setMessage(currentData, meta)
+
   setTimeout(function() {
-    entry.className = entry.className + ' show ' + setIndicatorLevel(data, status);
+    status.className = status.className + ' show ' + setIndicatorLevel(currentData, meta);
   }, 10);
 }
 
-function setMessage(data, date, status) {
-  var normData = Math.round((data + 1) / 4096 * 100)
-  var message = 'My soil moisture is <strong>' + normData + '%</strong>'
-  var dateMessage = '<span>' + moment(date).format('MMM D, h:mm a') + '</span>'
+function setMessage(currentData, meta) {
+  var message = 'My temperature is <strong>' + format1DecPlace(currentData.value) + '°C</strong>, state of charge is ' + format1DecPlace(meta.soc) + ', battery voltage is ' + format1DecPlace(meta.battery_voltage) + 'V.'
+  var dateMessage = '<span>' + moment(currentData.datetime).format('MMM D, h:mm a') + '</span>'
 
-  if (!data) {
+  if (!currentData.value) {
     return 'Oops! Looks like I am not connected to the Internet. You want to check?' + dateMessage
   }
 
-  if (data < config.trigger) {
-    return 'Please water me! My soil moisture is below <em>2500</em> at <strong>' + data + '</strong>' + dateMessage
-  }
-
-  if (status === 'changed') {
-    return 'Yay! I have been watered. ' + message + dateMessage
+  if (meta.battery_charge_required) {
+    message += ' Please charge your battery!'
   }
 
   return message + dateMessage
 }
 
-function setIndicatorLevel(data, status) {
-  if (!data) return 'warn'
-  if (data < config.trigger) return 'info'
-  if (status === 'changed') return 'success'
+function setIndicatorLevel(currentData, meta) {
+  if (meta.battery_charge_required) return 'error'
+  if (!currentData.value) return 'warn'
   return ''
 }
 
@@ -48,24 +45,18 @@ function getLastDefinedValue(currentIndex, array) {
 }
 
 var channel = 'basil'
-var list = document.getElementById('list')
-var socket = io.connect()
 var dataStore = []
-var config = {}
+var meta = {}
 
-socket.on('init', function(data) {
-  dataStore = data[ channel ]
-  config = data.config
+fetch('/api')
+.catch(function(error) {
+  console.log(error)
+})
+.then(function(response) {
+  response.json().then(function(data) {
+    dataStore = data[ channel ]
+    meta = data.meta
 
-  return dataStore.forEach(function(eachData, index) {
-    if (index > 0 && (eachData.data - getLastDefinedValue(index, dataStore) > config.change)) {
-      addListItem(parseInt(eachData.data), eachData.date, 'changed')
-    } else {
-      addListItem(parseInt(eachData.data), eachData.date)
-    }
+    addStatus(dataStore[ dataStore.length - 1 ], meta)
   })
 })
-
-socket.on(channel, function(data) {
-  // addListItem(data, new Date())
-});

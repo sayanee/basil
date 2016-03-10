@@ -10,83 +10,79 @@ var app = express()
 var server = app.listen(port, ip, function () {
   console.log('App running on ' + port)
 })
-var io = require('socket.io').listen(server)
 var request = require('request')
 var config = require('./config')
 var dataStore = []
-var sockets = []
+var EventSource = require('eventsource')
 
 var channelName = 'basil'
 var channel = config[ channelName ]
-
-if (process.env.NODE_ENV !== 'production') {
-  channel.interval = 5000
+var api = {
+  meta: {
+    name: 'Basil',
+    soc: undefined,
+    battery_voltage: undefined,
+    battery_charge_required: undefined,
+    units: channel.units
+  },
+  config: {
+    trigger: config[ channelName ].trigger,
+    change: config[ channelName ].change
+  },
+  basil: dataStore
 }
 
 function url() {
-  return channel.baseUrl + process.env.DEVICE_ID + channel.variableName + '?access_token=' + process.env.ACCESS_TOKEN
+  return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
+}
+
+function normaliseTemperature(value) {
+  return (value / 4096 * 3.3) * 100
 }
 
 function query(newClient) {
-  request({
-    uri: url(),
-    method: 'GET'
-  }).on('error', function(err) {
-    console.log(err)
-  }).on('data', function (chunk) {
-    var textChunk = chunk.toString('utf8')
-    var currResult
+  var eventSource = new EventSource(url())
+  eventSource.addEventListener('open', function(e) {
+    console.log('Listening to LM35 Temperature sensor now...');
+  } ,false)
 
-    if (textChunk) {
-      try {
-        currResult = JSON.parse(textChunk).result
-      } catch(error) {
-        logger.error(error)
-      }
-    }
+  eventSource.addEventListener('error', function(e) {
+    console.log(`Error: ${e}`);
+  } ,false);
 
-    var prevResult = dataStore.length > 0 ? dataStore[ dataStore.length - 1 ].data : 0
-    var message = currResult + ' at ' + new Date()
+  eventSource.addEventListener('temperature', function(e) {
+    console.log(`\n\nNew value from the sensor at ${new Date()}`)
 
-    console.log(newClient === true ? message + ' New client found!' : message)
-
-    sockets.forEach(function(eachSocket) {
-      eachSocket.emit(channelName, currResult)
-    })
-
+    var temperature = normaliseTemperature(JSON.parse(e.data).data)
+    console.log(`Temperature: ${temperature}`)
     dataStore.push({
-      data: currResult,
-      date: new Date()
+      value: temperature,
+      datetime: new Date()
     })
-  })
+  }, false)
+
+  eventSource.addEventListener('soc', function(e) {
+    var soc = JSON.parse(e.data).data
+    console.log(`State of Charge: ${soc}`)
+    api.meta.soc = soc
+  }, false)
+
+  eventSource.addEventListener('voltage', function(e) {
+    var voltage = JSON.parse(e.data).data
+    console.log(`Voltage: ${voltage}`)
+    api.meta.battery_voltage = voltage
+  }, false)
+
+  eventSource.addEventListener('alert', function(e) {
+    var alert = parseInt(JSON.parse(e.data).data) ? true : false
+    console.log(`Alert: ${alert}`)
+    api.meta.battery_charge_required = alert
+  }, false)
 }
 
 app.use(express.static('public'))
 app.get('/api', function(req, res){
-  res.json({
-    config: {
-      trigger: config[ channelName ].trigger,
-      change: config[ channelName ].change
-    },
-    basil: dataStore
-  })
-})
-
-io.on('connection', function (socket) {
-  sockets.push(socket)
-
-  if (dataStore.length > 0) {
-    socket.emit('init', {
-      config: {
-        trigger: config[ channelName ].trigger,
-        change: config[ channelName ].change
-      },
-      basil: dataStore
-    })
-  }
+  res.json(api)
 })
 
 query()
-setInterval(function() {
-  query()
-}, channel.interval)

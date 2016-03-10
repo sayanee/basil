@@ -3,13 +3,13 @@ h1 { text-align: center; margin: 2em; }
 h1 small { font-size: .6em; }
 h1 small a { color: #aaa; text-decoration: none; transition: color .4s ease-out; }
 h1 small a:hover, h1 small a:active { color: cornflowerblue; }
-.list { padding: 0; list-style-type: none; }
-.list li { padding: 1em; background: aliceblue; margin: 2em; border: 2px solid wheat; border-radius: 5px; position: relative; transition: all 1s ease-out; opacity: 0; }
-.list li.show { opacity: 1; }
-.list .warn { background: wheat; }
-.list .success {background: olivedrab; }
-.list .info {background: skyblue; }
-.list li span { text-align: right; font-size: .8em; position: absolute; bottom: 0; right: 0; background: wheat; padding: .3em .5em; }
+.status { padding: 1em; background: aliceblue; margin: 2em; border: 2px solid wheat; border-radius: 5px; position: relative; transition: all 1s ease-out; opacity: 0; }
+.show { opacity: 1; }
+.warn { background: wheat; }
+.success {background: olivedrab; }
+.info {background: skyblue; }
+.error {background: tomato; }
+.status span { text-align: right; font-size: .8em; position: absolute; bottom: 0; right: 0; background: wheat; padding: .3em .5em; }
 @media only screen and (max-width: 600px){
-  .list li { margin: .1em;}
+  .status { margin: .1em;}
 }

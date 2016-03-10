@@ -1,9 +1,9 @@
 module.exports = {
   "basil": {
     "baseUrl": 'https://api.particle.io/v1/devices/',
-    "variableName": "/moisture/",
+    "variableName": "temperature",
+    "units": '°C',
     "trigger": 2500,
-    "change": 500,
-    "interval": 7200000 // every 2 hours
+    "change": 500
   }
 }
