@@ -17,6 +17,7 @@ void setup()
   lipo.setThreshold(20);
 
   pinMode(A0, INPUT);
+  pinMode(WKP, INPUT_PULLDOWN);
 
   WiFi.on();
   Particle.connect();
@@ -24,7 +25,7 @@ void setup()
 
 void loop()
 {
-  if (Particle.connected()){
+  if (digitalRead(WKP) == LOW && Particle.connected()){
     analog = analogRead(A0);
     sprintf(analogStr, "%d", analog);
 
@@ -44,6 +45,6 @@ void loop()
 
     delay(5000);
 
-    System.sleep(SLEEP_MODE_DEEP,20);
+    System.sleep(WKP, RISING, 20);
   }
 }
