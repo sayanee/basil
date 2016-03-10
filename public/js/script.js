@@ -12,7 +12,7 @@ function addStatus(currentData, meta) {
 }
 
 function setMessage(currentData, meta) {
-  var message = 'My temperature is <strong>' + format1DecPlace(currentData.value) + '°C</strong>, state of charge is ' + format1DecPlace(meta.soc) + ', battery voltage is ' + format1DecPlace(meta.battery_voltage) + 'V.'
+  var message = 'My temperature is <strong>' + format1DecPlace(currentData.value) + '°C</strong>, state of charge is <strong>' + format1DecPlace(meta.soc) + '%</strong>, battery voltage is <strong>' + format1DecPlace(meta.battery_voltage) + 'V</strong>'
   var dateMessage = '<span>' + moment(currentData.datetime).format('MMM D, h:mm a') + '</span>'
 
   if (!currentData.value) {
