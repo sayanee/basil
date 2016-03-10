@@ -1,0 +1,24 @@
+{
+  "name": "cosmic",
+  "description": "notify when the basil plant needs water",
+  "main": "index.js",
+  "authors": [
+    "Sayanee <sayanee@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sayanee/cosmic",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fetch": "^0.11.0",
+    "moment": "^2.12.0"
+  }
+}

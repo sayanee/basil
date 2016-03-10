@@ -32,18 +32,6 @@ function setIndicatorLevel(currentData, meta) {
   return ''
 }
 
-function getLastDefinedValue(currentIndex, array) {
-  let trackIndex = currentIndex
-  let definedValue
-
-  while (trackIndex > 0 && !definedValue) {
-    trackIndex--
-    definedValue = array[ trackIndex ].data
-  }
-
-  return definedValue
-}
-
 var channel = 'basil'
 var dataStore = []
 var meta = {}
