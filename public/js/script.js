@@ -5,7 +5,21 @@ function format1DecPlace(floatValue) {
 function addStatus(currentData, meta) {
   document.getElementById('status').innerHTML = setMessage(currentData, meta)
   document.getElementById('datetime').innerHTML = moment(currentData.datetime).format('MMM D, h:mm a')
-  document.getElementById('battery').innerHTML = `Battery ${format1DecPlace(meta.soc)}%`
+
+  var soc = format1DecPlace(meta.soc)
+  var batteryEl = document.getElementById('battery')
+  batteryEl.className = 'battery'
+
+  document.getElementById('battery-soc').innerHTML = `Battery ${soc}%`
+
+  if (soc < 20) {
+    batteryEl.className += ' low'
+  } else if (soc > 75) {
+    batteryEl.className += ' full'
+  } else {
+    batteryEl.className += ' med'
+  }
+
 }
 
 function setMessage(currentData, meta) {

@@ -54,6 +54,82 @@ h1 small a:hover, h1 small a:active {
   margin: -1em 0 0 .4em;
 }
 
+.battery {
+  color: #34495e;
+  border-color: #34495e;
+  border-width: 1px;
+  border-style: solid;
+  display: inline-block;
+  width: 22px;
+  height: 12px;
+  position: relative;
+  border-radius: 2px;
+  box-sizing: border-box;
+  margin: 5px;
+}
+.battery::after,
+.battery::before {
+  background-color: #34495e;
+}
+.battery::before,
+.battery::after {
+  content: "";
+  position: absolute;
+}
+.battery::before {
+  top: 3px;
+  bottom: 3px;
+  right: -4px;
+  width: 2px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.battery::after {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 1px;
+  border-radius: 1px;
+  background-color: currentColor;
+}
+.battery.low {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+.battery.low::after,
+.battery.low::before {
+  background-color: #c0392b;
+}
+.battery.low::after {
+  right: 80%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.battery.med {
+  color: #f39c12;
+  border-color: #f39c12;
+}
+.battery.med::after,
+.battery.med::before {
+  background-color: #f39c12;
+}
+.battery.med::after {
+  right: 40%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.battery.full {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+.battery.full::after,
+.battery.full::before {
+  background-color: #27ae60;
+}
+
 @media only screen and (max-width: 600px){
   .status { margin: .1em;}
 }
