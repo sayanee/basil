@@ -8,7 +8,7 @@ var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
 var server = app.listen(port, ip, function () {
-  console.log('App running on ' + port)
+  console.log('Cosmic has started on http://localhost:' + port)
 })
 var request = require('request')
 var config = require('./config')
