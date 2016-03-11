@@ -7,7 +7,7 @@ function addStatus(currentData, meta) {
   status.innerHTML = setMessage(currentData, meta)
 
   setTimeout(function() {
-    status.className = status.className + ' show ' + setIndicatorLevel(currentData, meta);
+    status.className = status.className + ' ' + setIndicatorLevel(currentData, meta);
   }, 10);
 }
 
