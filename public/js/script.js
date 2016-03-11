@@ -3,17 +3,13 @@ function format1DecPlace(floatValue) {
 }
 
 function addStatus(currentData, meta) {
-  var status = document.getElementById('status')
-  status.innerHTML = setMessage(currentData, meta)
-
-  setTimeout(function() {
-    status.className = status.className + ' ' + setIndicatorLevel(currentData, meta);
-  }, 10);
+  document.getElementById('status').innerHTML = setMessage(currentData, meta)
+  document.getElementById('datetime').innerHTML = moment(currentData.datetime).format('MMM D, h:mm a')
+  document.getElementById('battery').innerHTML = `Battery ${format1DecPlace(meta.soc)}%`
 }
 
 function setMessage(currentData, meta) {
-  var message = 'My temperature is <strong>' + format1DecPlace(currentData.value) + '°C</strong>, state of charge is <strong>' + format1DecPlace(meta.soc) + '%</strong>, battery voltage is <strong>' + format1DecPlace(meta.battery_voltage) + 'V</strong>'
-  var dateMessage = '<span>' + moment(currentData.datetime).format('MMM D, h:mm a') + '</span>'
+  var message = 'My temperature is <strong>' + format1DecPlace(currentData.value) + '°C</strong>, battery voltage is <strong>' + format1DecPlace(meta.battery_voltage) + 'V</strong>'
 
   if (!currentData.value) {
     return 'Oops! Looks like I am not connected to the Internet. You want to check?' + dateMessage
@@ -23,13 +19,7 @@ function setMessage(currentData, meta) {
     message += ' Please charge your battery!'
   }
 
-  return message + dateMessage
-}
-
-function setIndicatorLevel(currentData, meta) {
-  if (meta.battery_charge_required) return 'error'
-  if (!currentData.value) return 'warn'
-  return ''
+  return message
 }
 
 var channel = 'basil'
