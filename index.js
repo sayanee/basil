@@ -20,16 +20,10 @@ var channel = config[ channelName ]
 var api = {
   meta: {
     name: 'Basil',
-    soc: undefined,
-    battery_voltage: undefined,
-    battery_charge_required: undefined,
+    generated_at: undefined,
     units: channel.units
   },
-  config: {
-    trigger: config[ channelName ].trigger,
-    change: config[ channelName ].change
-  },
-  basil: dataStore
+  data: dataStore
 }
 
 function url() {
@@ -37,46 +31,43 @@ function url() {
 }
 
 function normaliseTemperature(value) {
-  return (value / 4096 * 3.3) * 100
+  return formatOneDecimalPlace((value / 4096 * 3.3) * 100)
+}
+
+function formatOneDecimalPlace(value) {
+  return Math.round( value * 10) / 10
 }
 
 function query(newClient) {
   var eventSource = new EventSource(url())
   eventSource.addEventListener('open', function(e) {
-    console.log('Listening to LM35 Temperature sensor now...');
+    console.log('Listening to Basil now...');
   } ,false)
 
   eventSource.addEventListener('error', function(e) {
     console.log(`Error: ${e}`);
   } ,false);
 
-  eventSource.addEventListener('temperature', function(e) {
-    console.log(`\n\nNew value from the sensor at ${new Date()}`)
+  eventSource.addEventListener('basil', function(e) {
+    var payload = JSON.parse(e.data)
+    var publishedAt = payload.published_at
+    var data = JSON.parse(payload.data)
 
-    var temperature = normaliseTemperature(JSON.parse(e.data).data)
-    console.log(`Temperature: ${temperature}`)
+    var temperature = normaliseTemperature(data.temperature)
+    var batteryVoltage = formatOneDecimalPlace(data.voltage)
+    var stateOfCharge = formatOneDecimalPlace(data.soc)
+    var batteryAlert = data.alert ? true : false
+
     dataStore.push({
-      value: temperature,
-      datetime: new Date()
+      published_at: publishedAt,
+      temperature: temperature,
+      battery_voltage: batteryVoltage,
+      state_of_charge: stateOfCharge,
+      battery_alert: batteryAlert
     })
-  }, false)
+    api.meta.generated_at = new Date()
 
-  eventSource.addEventListener('soc', function(e) {
-    var soc = JSON.parse(e.data).data
-    console.log(`State of Charge: ${soc}`)
-    api.meta.soc = soc
-  }, false)
-
-  eventSource.addEventListener('voltage', function(e) {
-    var voltage = JSON.parse(e.data).data
-    console.log(`Voltage: ${voltage}`)
-    api.meta.battery_voltage = voltage
-  }, false)
-
-  eventSource.addEventListener('alert', function(e) {
-    var alert = parseInt(JSON.parse(e.data).data) ? true : false
-    console.log(`Alert: ${alert}`)
-    api.meta.battery_charge_required = alert
+    console.log(`${new Date()} Temperature: ${temperature}\tBattery voltage: ${batteryVoltage}\tState of Charge: ${stateOfCharge}\tBatt alert: ${batteryAlert}`)
   }, false)
 }
 

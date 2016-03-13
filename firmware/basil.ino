@@ -9,10 +9,7 @@ double voltage = 0;
 double soc = 0;
 bool alert;
 
-char analogStr[40];
-char voltageStr[10];
-char socStr[10];
-char alertStr[10];
+char analogStr[100];
 
 void setup()
 {
@@ -42,21 +39,12 @@ void loop()
 
 void publishData(int delayTime) {
   analog = analogRead(TEMPERATURE_PIN);
-  sprintf(analogStr, "%d", analog);
-
   voltage = lipo.getVoltage();
-  sprintf(voltageStr, "%f", voltage);
-
   soc = lipo.getSOC();
-  sprintf(socStr, "%f", soc);
-
   alert = lipo.getAlert();
-  sprintf(alertStr, "%d", alert);
 
-  Particle.publish("temperature", analogStr);
-  Particle.publish("voltage", voltageStr);
-  Particle.publish("soc", socStr);
-  Particle.publish("alert", alertStr);
+  sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
+  Particle.publish("basil", analogStr);
 
   delay(delayTime);
 }
