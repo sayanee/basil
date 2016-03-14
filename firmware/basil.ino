@@ -29,19 +29,34 @@ void loop()
 {
   if (Particle.connected()) {
     if (digitalRead(WAKEUP_PIN) == LOW) {
-      publishData(5000);
+      publishData(5000, false);
       System.sleep(WAKEUP_PIN, RISING, 3595); // 1 hour - 5 seconds
     } else if (digitalRead(DEBUG_PIN) == HIGH) {
-      publishData(3000);
+      publishData(3000, true);
     }
   }
 }
 
-void publishData(int delayTime) {
+void publishData(int delayTime, bool debugMode) {
+  int countAverageNum = 10;
+
   analog = analogRead(TEMPERATURE_PIN);
   voltage = lipo.getVoltage();
   soc = lipo.getSOC();
   alert = lipo.getAlert();
+
+
+  if (debugMode) {
+    while (countAverageNum > 0) {
+      analog += analogRead(TEMPERATURE_PIN);
+      countAverageNum = countAverageNum - 1;
+      delay(10);
+    }
+
+    analog = analog / 10;
+
+    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"debug\":true}", analog, voltage, soc, alert);
+  }
 
   sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
   Particle.publish("basil", analogStr);

@@ -57,17 +57,23 @@ function query(newClient) {
     var batteryVoltage = formatOneDecimalPlace(data.voltage)
     var stateOfCharge = formatOneDecimalPlace(data.soc)
     var batteryAlert = data.alert ? true : false
-
-    dataStore.push({
+    var newData = {
       published_at: publishedAt,
       temperature: temperature,
       battery_voltage: batteryVoltage,
       state_of_charge: stateOfCharge,
       battery_alert: batteryAlert
-    })
-    api.meta.generated_at = new Date()
+    }
 
-    console.log(`${new Date()} Temperature: ${temperature}\tBattery voltage: ${batteryVoltage}\tState of Charge: ${stateOfCharge}\tBatt alert: ${batteryAlert}`)
+    if (data.debug) {
+      newData.debug = data.debug
+      console.log(`${new Date()} Temperature: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
+    } else {
+      console.log(`${new Date()} Temperature: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}\tDebug: yes`)
+    }
+
+    dataStore.push(newData)
+    api.meta.generated_at = new Date()
   }, false)
 }
 
