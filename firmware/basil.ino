@@ -30,7 +30,7 @@ void loop()
   if (Particle.connected()) {
     if (digitalRead(WAKEUP_PIN) == LOW) {
       publishData(5000);
-      System.sleep(WAKEUP_PIN, RISING, 3600); // 1 hour
+      System.sleep(WAKEUP_PIN, RISING, 3595); // 1 hour - 5 seconds
     } else if (digitalRead(DEBUG_PIN) == HIGH) {
       publishData(3000);
     }
