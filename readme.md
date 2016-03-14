@@ -17,6 +17,13 @@
 
   ![](img/web.png)
 
+## Wiring
+
+- Turn on DIP `Switch 1` to wakeup - for flashing firmware
+- Turn on DIP `Switch 1` and `Switch 2` for debug mode - for getting analog value every 5 seconds (instead of every hour)
+
+![](hardware/basil.jpg)
+
 ## Research
 
 ### Sensors
