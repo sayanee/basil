@@ -16,6 +16,8 @@
     "dotenv": "^2.0.0",
     "eventsource": "^0.2.1",
     "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "moment": "^2.12.0",
     "request": "^2.69.0",
     "tracer": "^0.8.3"
   },

@@ -1,0 +1,20 @@
+doctype
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="x-ua-compatible" content="ie=edge")
+    title Hello, I'm a Basil plant
+    meta(name="description", content="Soil moisture monitoring and notification")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="style.css")
+
+  body
+    h1 Hello, I'm a Basil plant 
+      small
+        a(href="https://github.com/sayanee/cosmic") docs and code
+
+    .status
+      p#status !{status}
+      span#datetime=datetime
+      span#battery-soc=soc
+      div(id="battery" class="battery {battery_status}")

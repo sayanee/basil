@@ -7,6 +7,7 @@ var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
+var moment = require('moment')
 var server = app.listen(port, ip, function () {
   console.log('Cosmic has started on http://localhost:' + port)
 })
@@ -25,6 +26,7 @@ var api = {
   },
   data: dataStore
 }
+var viewData
 
 function url() {
   return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
@@ -36,6 +38,50 @@ function normaliseTemperature(value) {
 
 function formatOneDecimalPlace(value) {
   return Math.round( value * 10) / 10
+}
+
+function setStatus(currentData) {
+  if (!currentData) {
+    return 'Waiting for data...'
+  }
+
+  var message = 'My temperature is <strong>' + currentData.temperature + '°C</strong>, battery voltage is <strong>' + currentData.battery_voltage + 'V</strong>'
+
+  if (currentData.alert) {
+    message += ' Please charge your battery!'
+  }
+
+  return message
+}
+
+function getBatteryStatus(viewData) {
+  if (!viewData) {
+    return ''
+  }
+  
+  if (viewData.soc < 20) {
+    return ' low'
+  } else if (viewData.soc > 75) {
+    return ' full'
+  } else {
+    return ' med'
+  }
+}
+
+function getPublishedDate(viewData) {
+  if (!viewData) {
+    return 'awaiting...'
+  }
+
+  return moment(viewData.published_at).format('MMM D, h:mm a')
+}
+
+function getSOC(viewData) {
+  if (!viewData) {
+    return 'awaiting...'
+  }
+
+  return `Battery ${viewData.state_of_charge}%`
 }
 
 function query(newClient) {
@@ -73,6 +119,7 @@ function query(newClient) {
     }
 
     dataStore.push(newData)
+    viewData = newData
     api.meta.generated_at = new Date()
   }, false)
 }
@@ -80,6 +127,14 @@ function query(newClient) {
 app.use(express.static('public'))
 app.get('/api', function(req, res){
   res.json(api)
+})
+app.get('/', function(req, res) {
+  res.render('index.jade', {
+    status: setStatus(viewData),
+    datetime: getPublishedDate(viewData),
+    soc: getSOC(viewData),
+    battery_status: getBatteryStatus(viewData)
+  })
 })
 
 query()
