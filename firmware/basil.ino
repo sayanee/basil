@@ -38,15 +38,14 @@ void loop()
 }
 
 void publishData(int delayTime, bool debugMode) {
-  int countAverageNum = 10;
+  int countAverageNum = 9;
 
   analog = analogRead(TEMPERATURE_PIN);
   voltage = lipo.getVoltage();
   soc = lipo.getSOC();
   alert = lipo.getAlert();
 
-
-  if (debugMode) {
+  if (!debugMode) {
     while (countAverageNum > 0) {
       analog += analogRead(TEMPERATURE_PIN);
       countAverageNum = countAverageNum - 1;
@@ -55,11 +54,11 @@ void publishData(int delayTime, bool debugMode) {
 
     analog = analog / 10;
 
+    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
+  } else {
     sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"debug\":true}", analog, voltage, soc, alert);
   }
 
-  sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
   Particle.publish("basil", analogStr);
-
   delay(delayTime);
 }
