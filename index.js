@@ -58,10 +58,10 @@ function getBatteryStatus(viewData) {
   if (!viewData) {
     return ''
   }
-  
-  if (viewData.soc < 20) {
+
+  if (viewData.state_of_charge < 20) {
     return ' low'
-  } else if (viewData.soc > 75) {
+  } else if (viewData.state_of_charge > 75) {
     return ' full'
   } else {
     return ' med'
