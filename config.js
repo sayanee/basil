@@ -1,4 +1,6 @@
 module.exports = {
+  "utc": "+0800",
+  "timezone": "Asia/Singapore",
   "basil": {
     "baseUrl": 'https://api.particle.io/v1/devices/',
     "units": {
