@@ -7,9 +7,9 @@ var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
-var moment = require('moment')
+var moment = require('moment-timezone')
 var server = app.listen(port, ip, function () {
-  console.log('Cosmic has started on http://localhost:' + port)
+  console.log('Basil has started on http://localhost:' + port)
 })
 var request = require('request')
 var config = require('./config')
@@ -22,6 +22,8 @@ var api = {
   meta: {
     name: 'Basil',
     generated_at: undefined,
+    timezone: config.timezone,
+    utc: config.utc,
     units: channel.units
   },
   data: dataStore
@@ -73,7 +75,7 @@ function getPublishedDate(viewData) {
     return 'awaiting...'
   }
 
-  return moment(viewData.published_at).format('MMM D, h:mm a')
+  return moment(viewData.published_at).tz(config.timezone).format('MMM D, h:mm a')
 }
 
 function getSOC(viewData) {
@@ -104,7 +106,7 @@ function query(newClient) {
     var stateOfCharge = formatOneDecimalPlace(data.soc)
     var batteryAlert = data.alert ? true : false
     var newData = {
-      published_at: publishedAt,
+      published_at: moment(publishedAt).tz(config.timezone),
       temperature: temperature,
       battery_voltage: batteryVoltage,
       state_of_charge: stateOfCharge,
@@ -126,6 +128,7 @@ function query(newClient) {
 
 app.use(express.static('public'))
 app.get('/api', function(req, res){
+  api.meta.generated_at = moment().tz(config.timezone).format()
   res.json(api)
 })
 app.get('/', function(req, res) {

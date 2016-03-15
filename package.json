@@ -1,5 +1,5 @@
 {
-  "name": "cosmic",
+  "name": "basil",
   "version": "1.0.0",
   "description": "notify when the basil plant needs water",
   "main": "index.js",
@@ -17,7 +17,7 @@
     "eventsource": "^0.2.1",
     "express": "^4.13.4",
     "jade": "^1.11.0",
-    "moment": "^2.12.0",
+    "moment-timezone": "^0.5.1",
     "request": "^2.69.0",
     "tracer": "^0.8.3"
   },
