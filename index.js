@@ -106,11 +106,12 @@ function getSOC(viewData) {
 function listen(url) {
   var eventSource = new EventSource(url)
   eventSource.addEventListener('open', function(e) {
-    console.log('Listening to Basil sensor now...');
+    console.log('Listening to Basil sensor now...')
   } ,false)
 
   eventSource.addEventListener('error', function(e) {
-    console.log(`Error: ${e}`);
+    console.log('Error on eventsource:')
+    console.log(e)
   } ,false);
 
   eventSource.addEventListener('basil', function(e) {
