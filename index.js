@@ -13,7 +13,7 @@ var server = app.listen(port, ip, function () {
 var request = require('request')
 var morgan = require('morgan')
 var logger = require('tracer').colorConsole({
-  format: '{{title}}: \t{{timestamp}} ({{path}}:{{line}}:{{pos}}:{{method}}) {{message}}',
+  format: '{{title}}: \t{{timestamp}} ({{path}}:{{line}}:{{pos}}) {{message}}',
   dateformat: 'dd mmm HH:MM:ss',
   preprocess:  function(data) {
     data.path = data.path.replace(process.cwd(), '');
