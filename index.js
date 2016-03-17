@@ -16,7 +16,7 @@ var config = require('./config')
 var EventSource = require('eventsource')
 
 var Firebase = require('firebase')
-var db = new Firebase("https://blinding-inferno-4222.firebaseio.com/")
+var db = new Firebase(process.env.FIREBASE_URL)
 
 var channelName = 'basil'
 var channel = config[ channelName ]
