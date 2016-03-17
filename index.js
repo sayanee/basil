@@ -2,16 +2,22 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-var logger = require('tracer').colorConsole()
 var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
 var moment = require('moment-timezone')
 var server = app.listen(port, ip, function () {
-  console.log('Basil has started on http://localhost:' + port)
+  logger.info('Basil has started on http://localhost:' + port)
 })
 var request = require('request')
+var logger = require('tracer').colorConsole({
+  format: '{{title}}: \t{{timestamp}} ({{path}}:{{line}}:{{pos}}:{{method}}) {{message}}',
+  dateformat: 'dd mmm HH:MM:ss',
+  preprocess:  function(data) {
+    data.path = data.path.replace(process.cwd(), '');
+  }
+})
 var config = require('./config')
 var EventSource = require('eventsource')
 
@@ -38,7 +44,7 @@ db.authWithPassword({
   password: process.env.FIREBASE_PASSWORD
 }, function(error, userData) {
   if (error) {
-    console.log('Error creating user:' + error)
+    logger.error(error)
     db.child('data').on('value', function(snapshot) {
       api.data = snapshot.val()
     })
@@ -106,12 +112,11 @@ function getSOC(viewData) {
 function listen(url) {
   var eventSource = new EventSource(url)
   eventSource.addEventListener('open', function(e) {
-    console.log('Listening to Basil sensor now...')
+    logger.info('Listening to Basil sensor now...')
   } ,false)
 
   eventSource.addEventListener('error', function(e) {
-    console.log('Error on eventsource:')
-    console.log(e)
+    logger.error(e)
   } ,false);
 
   eventSource.addEventListener('basil', function(e) {
@@ -133,9 +138,9 @@ function listen(url) {
 
     if (data.debug) {
       newData.debug = data.debug
-      console.log(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}\tDebug: yes`)
+      logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}\tDebug: yes`)
     } else {
-      console.log(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
+      logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
     }
 
     db.child('data').push().setWithPriority(newData, api.meta.total_data + 1)
