@@ -11,6 +11,7 @@ var server = app.listen(port, ip, function () {
   logger.info('Basil has started on http://localhost:' + port)
 })
 var request = require('request')
+var morgan = require('morgan')
 var logger = require('tracer').colorConsole({
   format: '{{title}}: \t{{timestamp}} ({{path}}:{{line}}:{{pos}}:{{method}}) {{message}}',
   dateformat: 'dd mmm HH:MM:ss',
@@ -159,6 +160,7 @@ function listen(url) {
 }
 
 app.use(express.static('public'))
+app.use(morgan('log: \t:date[clf] :method :url, HTTP :http-version, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr'))
 
 app.get('/api', function(req, res){
   api.meta.generated_at = moment().tz(config.timezone).format()
