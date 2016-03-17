@@ -71,7 +71,7 @@ function setStatus(currentData) {
     return 'Waiting for data...'
   }
 
-  var message = 'My temperature is <strong>' + currentData.temperature + '°C</strong>, battery voltage is <strong>' + currentData.battery_voltage + 'V</strong>'
+  var message = `My temperature is <strong>${currentData.temperature}${config.units.temperature}</strong>, battery voltage is <strong>${currentData.battery_voltage}${config.units.battery_voltage}</strong>`
 
   if (currentData.alert) {
     message += ' Please charge your battery!'
@@ -139,7 +139,7 @@ function listen(url) {
 
     if (data.debug) {
       newData.debug = data.debug
-      logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}\tDebug: yes`)
+      logger.info(`${new Date()} Temp: ${temperature}${config.units.temperature}\tVoltage: ${batteryVoltage}${config.units.battery_voltage}\tSOC: ${stateOfCharge}${config.units.battery_status}\tAlert: ${batteryAlert}\tDebug: yes`)
     } else {
       logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
     }
@@ -157,6 +157,34 @@ function listen(url) {
       api.data = snapshot.val()
     })
   }, false)
+
+  if (process.argv[2] === 'debug') {
+    setInterval(function() {
+      var newData = {
+        published_at: moment().tz(config.timezone).toString(),
+        temperature: `29.4`,
+        battery_voltage: `3.5`,
+        state_of_charge: `89`,
+        battery_alert: false,
+        debug: true
+      }
+
+      logger.info(`${new Date()} Temp: ${newData.temperature}${config[channelName].units.temperature}\tVoltage: ${newData.battery_voltage}${config[channelName].units.battery_voltage}\tSOC: ${newData.state_of_charge}${config[channelName].units.state_of_charge}\tAlert: ${newData.battery_alert}\tDebug: yes`)
+
+      db.child('data').push().setWithPriority(newData, api.meta.total_data + 1)
+      db.child('meta/total_data').transaction(function(reply) {
+        api.meta.total_data = reply + 1
+        return reply + 1
+      })
+      db.child('meta/generated_at').set(new Date())
+
+      viewData = newData
+      api.meta.generated_at = new Date()
+      db.child('data').on('value', function(snapshot) {
+        api.data = snapshot.val()
+      })
+    }, 5000)
+  }
 }
 
 app.use(express.static('public'))

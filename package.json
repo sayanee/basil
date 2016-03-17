@@ -5,6 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "debug": "node index debug",
     "deploy": "git push production master",
     "start": "node index",
     "log": "rhc tail -o '-n 200' -a basil",
