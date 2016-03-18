@@ -35,24 +35,23 @@ var api = {
     utc: config.utc,
     units: channel.units,
     total_data: 0
-  },
-  data: {}
+  }
 }
 var viewData
 
 db.authWithPassword({
   email: process.env.FIREBASE_EMAIL,
   password: process.env.FIREBASE_PASSWORD
-}, function(error, userData) {
+}, function(error) {
   if (error) {
     logger.error(error)
+  } else {
+    logger.info('Connected to Firebase db!')
     db.child('data').on('value', function(snapshot) {
       api.data = snapshot.val()
     })
   }
 })
-
-db.set(api)
 
 function url() {
   return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
@@ -196,12 +195,8 @@ app.get('/api', function(req, res){
 })
 
 app.get('/', function(req, res) {
-  res.render('index.jade', {
-    status: setStatus(viewData),
-    datetime: getPublishedDate(viewData),
-    soc: getSOC(viewData),
-    battery_status: getBatteryStatus(viewData)
-  })
+  logger.trace(api.data)
+  res.render('index.jade', api.data[ api.data.length - 1])
 })
 
 listen(url())
