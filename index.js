@@ -83,9 +83,7 @@ function setStatus(currentData) {
 }
 
 function getBatteryStatus(stateOfCharge) {
-  logger.trace(stateOfCharge)
-  logger.trace(Math.floor((stateOfCharge + 9) / 10))
-  return Math.floor((stateOfCharge + 9) / 10)
+  return Math.floor((parseFloat(stateOfCharge) + 9) / 10)
 }
 
 function getPublishedDate(viewData) {
@@ -154,9 +152,9 @@ function listen(url) {
     setInterval(function() {
       var newData = {
         published_at: moment().tz(config.timezone).toString(),
-        temperature: `29.4`,
-        battery_voltage: `3.5`,
-        state_of_charge: `89`,
+        temperature: '29.4',
+        battery_voltage: '3.5',
+        state_of_charge: '89',
         battery_alert: false,
         debug: true
       }
@@ -178,6 +176,7 @@ function listen(url) {
 }
 
 app.use(express.static('public'))
+app.set('view engine', 'jade')
 app.use(morgan('log: \t:date[clf] :method :url, HTTP :http-version, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr'))
 
 app.get('/api', function(req, res){
@@ -192,7 +191,8 @@ app.get('/', function(req, res) {
     status: setStatus(renderData),
     datetime: getPublishedDate(renderData),
     soc: getSOC(renderData),
-    battery_status: getBatteryStatus(renderData.state_of_charge)
+    battery_status: getBatteryStatus(renderData.state_of_charge),
+    debug: renderData.debug
   })
 })
 
