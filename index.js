@@ -30,7 +30,6 @@ var channel = config[ channelName ]
 var api = {
   meta: {
     name: 'Basil',
-    generated_at: '',
     timezone: config.timezone,
     utc: config.utc,
     units: channel.units,
@@ -49,6 +48,10 @@ db.authWithPassword({
     logger.info('Connected to Firebase db!')
     db.child('data').on('value', function(snapshot) {
       api.data = snapshot.val()
+    })
+
+    db.child('meta').on('value', function(snapshot) {
+      api.meta = snapshot.val()
     })
   }
 })
@@ -70,7 +73,7 @@ function setStatus(currentData) {
     return 'Waiting for data...'
   }
 
-  var message = `My temperature is <strong>${currentData.temperature}${config.units.temperature}</strong>, battery voltage is <strong>${currentData.battery_voltage}${config.units.battery_voltage}</strong>`
+  var message = `My temperature is <strong>${currentData.temperature}${config[ channelName ].units.temperature}</strong>, battery voltage is <strong>${currentData.battery_voltage}${config[ channelName ].units.battery_voltage}</strong>`
 
   if (currentData.alert) {
     message += ' Please charge your battery!'
@@ -143,15 +146,13 @@ function listen(url) {
       logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
     }
 
-    db.child('data').push().setWithPriority(newData, api.meta.total_data + 1)
+    api.meta.total_data += 1
+    db.child('data').child(api.meta.total_data).setWithPriority(newData, api.meta.total_data)
     db.child('meta/total_data').transaction(function(reply) {
-      api.meta.total_data = reply + 1
-      return reply + 1
+      return api.meta.total_data
     })
-    db.child('meta/generated_at').set(new Date())
 
     viewData = newData
-    api.meta.generated_at = new Date()
     db.child('data').on('value', function(snapshot) {
       api.data = snapshot.val()
     })
@@ -170,15 +171,13 @@ function listen(url) {
 
       logger.info(`${new Date()} Temp: ${newData.temperature}${config[channelName].units.temperature}\tVoltage: ${newData.battery_voltage}${config[channelName].units.battery_voltage}\tSOC: ${newData.state_of_charge}${config[channelName].units.state_of_charge}\tAlert: ${newData.battery_alert}\tDebug: yes`)
 
-      db.child('data').push().setWithPriority(newData, api.meta.total_data + 1)
+      api.meta.total_data += 1
+      db.child('data').child(api.meta.total_data).setWithPriority(newData, api.meta.total_data)
       db.child('meta/total_data').transaction(function(reply) {
-        api.meta.total_data = reply + 1
-        return reply + 1
+        return api.meta.total_data
       })
-      db.child('meta/generated_at').set(new Date())
 
       viewData = newData
-      api.meta.generated_at = new Date()
       db.child('data').on('value', function(snapshot) {
         api.data = snapshot.val()
       })
@@ -195,8 +194,14 @@ app.get('/api', function(req, res){
 })
 
 app.get('/', function(req, res) {
-  logger.trace(api.data)
-  res.render('index.jade', api.data[ api.data.length - 1])
+  var renderData = api.data[ api.meta.total_data ]
+
+  res.render('index.jade', {
+    status: setStatus(renderData),
+    datetime: getPublishedDate(renderData),
+    soc: getSOC(renderData),
+    battery_status: getBatteryStatus(renderData)
+  })
 })
 
 listen(url())
