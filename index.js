@@ -6,6 +6,7 @@ var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var logger = require('./config/logger')
 var db = require('./config/database')
+var routes = require('./config/routes')
 
 var express = require('express')
 var app = express()
@@ -31,15 +32,13 @@ var viewData
 
 var server = app.listen(port, ip, function () {
   logger.info('Basil has started on http://localhost:' + port)
-  db.child('data').on('value', function(snapshot) {
-    api.data = snapshot.val()
-  })
 
-  db.child('meta').on('value', function(snapshot) {
-    api.meta = snapshot.val()
-  })
+  routes(app)
 })
 
+app.use(express.static('public'))
+app.set('view engine', 'jade')
+app.use(morgan('log: \t:date[clf] :method :url, HTTP :http-version, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr'))
 
 function url() {
   return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
@@ -51,40 +50,6 @@ function normaliseTemperature(value) {
 
 function formatOneDecimalPlace(value) {
   return Math.round( value * 10) / 10
-}
-
-function setStatus(currentData) {
-  if (!currentData) {
-    return 'Waiting for data...'
-  }
-
-  var message = `My temperature is <strong>${currentData.temperature}${config[ channelName ].units.temperature}</strong>, battery voltage is <strong>${currentData.battery_voltage}${config[ channelName ].units.battery_voltage}</strong>`
-
-  if (currentData.alert) {
-    message += ' Please charge your battery!'
-  }
-
-  return message
-}
-
-function getBatteryStatus(stateOfCharge) {
-  return Math.floor((parseFloat(stateOfCharge) + 9) / 10)
-}
-
-function getPublishedDate(viewData) {
-  if (!viewData) {
-    return 'awaiting...'
-  }
-
-  return moment(new Date(viewData.published_at)).tz(config.timezone).format('MMM D, h:mm a')
-}
-
-function getSOC(viewData) {
-  if (!viewData) {
-    return 'awaiting...'
-  }
-
-  return `Battery ${viewData.state_of_charge}%`
 }
 
 function listen(url) {
@@ -159,26 +124,5 @@ function listen(url) {
     }, 5000)
   }
 }
-
-app.use(express.static('public'))
-app.set('view engine', 'jade')
-app.use(morgan('log: \t:date[clf] :method :url, HTTP :http-version, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr'))
-
-app.get('/api', function(req, res){
-  api.meta.generated_at = moment().tz(config.timezone).format()
-  res.json(api)
-})
-
-app.get('/', function(req, res) {
-  var renderData = api.data[ api.meta.total_data ]
-
-  res.render('index.jade', {
-    status: setStatus(renderData),
-    datetime: getPublishedDate(renderData),
-    soc: getSOC(renderData),
-    battery_status: getBatteryStatus(renderData.state_of_charge),
-    debug: renderData.debug
-  })
-})
 
 listen(url())
