@@ -5,21 +5,16 @@ if (process.env.NODE_ENV !== 'production') {
 var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var logger = require('./config/logger')
+var db = require('./config/database')
 
 var express = require('express')
 var app = express()
 var moment = require('moment-timezone')
-var server = app.listen(port, ip, function () {
-  logger.info('Basil has started on http://localhost:' + port)
-})
 var request = require('request')
 var morgan = require('morgan')
 
 var config = require('./config')
 var EventSource = require('eventsource')
-
-var Firebase = require('firebase')
-var db = new Firebase(process.env.FIREBASE_URL)
 
 var channelName = 'basil'
 var channel = config[ channelName ]
@@ -34,23 +29,17 @@ var api = {
 }
 var viewData
 
-db.authWithPassword({
-  email: process.env.FIREBASE_EMAIL,
-  password: process.env.FIREBASE_PASSWORD
-}, function(error) {
-  if (error) {
-    logger.error(error)
-  } else {
-    logger.info('Connected to Firebase db!')
-    db.child('data').on('value', function(snapshot) {
-      api.data = snapshot.val()
-    })
+var server = app.listen(port, ip, function () {
+  logger.info('Basil has started on http://localhost:' + port)
+  db.child('data').on('value', function(snapshot) {
+    api.data = snapshot.val()
+  })
 
-    db.child('meta').on('value', function(snapshot) {
-      api.meta = snapshot.val()
-    })
-  }
+  db.child('meta').on('value', function(snapshot) {
+    api.meta = snapshot.val()
+  })
 })
+
 
 function url() {
   return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
