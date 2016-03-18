@@ -95,41 +95,116 @@ h1 small a:hover, h1 small a:active {
   border-radius: 1px;
   background-color: currentColor;
 }
-.battery.low {
+.battery[data-charge='1'] {
   color: #c0392b;
   border-color: #c0392b;
 }
-.battery.low::after,
-.battery.low::before {
+.battery[data-charge='1']::after,
+.battery[data-charge='1']::before {
   background-color: #c0392b;
 }
-.battery.low::after {
-  right: 80%;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+.battery[data-charge='1']::after {
+  right: 90%;
 }
-.battery.med {
+.battery[data-charge='2'] {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+.battery[data-charge='2']::after,
+.battery[data-charge='2']::before {
+  background-color: #c0392b;
+}
+.battery[data-charge='2']::after {
+  right: 80%;
+}
+.battery[data-charge='3'] {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+.battery[data-charge='3']::after,
+.battery[data-charge='3']::before {
+  background-color: #c0392b;
+}
+.battery[data-charge='3']::after {
+  right: 70%;
+}
+.battery[data-charge='4'] {
   color: #f39c12;
   border-color: #f39c12;
 }
-.battery.med::after,
-.battery.med::before {
+.battery[data-charge='4']::after,
+.battery[data-charge='4']::before {
   background-color: #f39c12;
 }
-.battery.med::after {
-  right: 40%;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+.battery[data-charge='4']::after {
+  right: 60%;
 }
-.battery.full {
+.battery[data-charge='5'] {
+  color: #f39c12;
+  border-color: #f39c12;
+}
+.battery[data-charge='5']::after,
+.battery[data-charge='5']::before {
+  background-color: #f39c12;
+}
+.battery[data-charge='5']::after {
+  right: 50%;
+}
+.battery[data-charge='6'] {
+  color: #f39c12;
+  border-color: #f39c12;
+}
+.battery[data-charge='6']::after,
+.battery[data-charge='6']::before {
+  background-color: #f39c12;
+}
+.battery[data-charge='6']::after {
+  right: 40%;
+}
+.battery[data-charge='7'] {
   color: #27ae60;
   border-color: #27ae60;
 }
-.battery.full::after,
-.battery.full::before {
+.battery[data-charge='7']::after,
+.battery[data-charge='7']::before {
   background-color: #27ae60;
 }
-
+.battery[data-charge='7']::after {
+  right: 30%;
+}
+.battery[data-charge='8'] {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+.battery[data-charge='8']::after,
+.battery[data-charge='8']::before {
+  background-color: #27ae60;
+}
+.battery[data-charge='8']::after {
+  right: 20%;
+}
+.battery[data-charge='9'] {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+.battery[data-charge='9']::after,
+.battery[data-charge='9']::before {
+  background-color: #27ae60;
+}
+.battery[data-charge='9']::after {
+  right: 10%;
+}
+.battery[data-charge='10'] {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+.battery[data-charge='10']::after,
+.battery[data-charge='10']::before {
+  background-color: #27ae60;
+}
+.battery[data-charge='10']::after {
+  right: 0%;
+}
 @media only screen and (max-width: 600px){
   .status { margin: .1em;}
 }

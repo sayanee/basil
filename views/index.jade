@@ -18,4 +18,4 @@ html(lang="en")
       p#status !{status}
       span#datetime=datetime
       span#battery-soc=soc
-      div(id="battery" class="battery #{battery_status}")
+      div(id="battery" class="battery" data-charge="#{battery_status}")

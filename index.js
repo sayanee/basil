@@ -82,18 +82,10 @@ function setStatus(currentData) {
   return message
 }
 
-function getBatteryStatus(viewData) {
-  if (!viewData) {
-    return ''
-  }
-
-  if (viewData.state_of_charge < 20) {
-    return ' low'
-  } else if (viewData.state_of_charge > 75) {
-    return ' full'
-  } else {
-    return ' med'
-  }
+function getBatteryStatus(stateOfCharge) {
+  logger.trace(stateOfCharge)
+  logger.trace(Math.floor((stateOfCharge + 9) / 10))
+  return Math.floor((stateOfCharge + 9) / 10)
 }
 
 function getPublishedDate(viewData) {
@@ -200,7 +192,7 @@ app.get('/', function(req, res) {
     status: setStatus(renderData),
     datetime: getPublishedDate(renderData),
     soc: getSOC(renderData),
-    battery_status: getBatteryStatus(renderData)
+    battery_status: getBatteryStatus(renderData.state_of_charge)
   })
 })
 
