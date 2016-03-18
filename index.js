@@ -4,6 +4,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
+var logger = require('./config/logger')
+
 var express = require('express')
 var app = express()
 var moment = require('moment-timezone')
@@ -12,13 +14,7 @@ var server = app.listen(port, ip, function () {
 })
 var request = require('request')
 var morgan = require('morgan')
-var logger = require('tracer').colorConsole({
-  format: '{{title}}: \t{{timestamp}} ({{path}}:{{line}}:{{pos}}) {{message}}',
-  dateformat: 'dd mmm HH:MM:ss',
-  preprocess:  function(data) {
-    data.path = data.path.replace(process.cwd(), '');
-  }
-})
+
 var config = require('./config')
 var EventSource = require('eventsource')
 
