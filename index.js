@@ -101,7 +101,7 @@ function getPublishedDate(viewData) {
     return 'awaiting...'
   }
 
-  return moment(viewData.published_at).tz(config.timezone).format('MMM D, h:mm a')
+  return moment(new Date(viewData.published_at)).tz(config.timezone).format('MMM D, h:mm a')
 }
 
 function getSOC(viewData) {
