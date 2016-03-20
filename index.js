@@ -2,39 +2,38 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-var port = process.env.OPENSHIFT_NODE4_PORT || 1337
-var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
+var config = require('./config')
 var logger = require('./config/logger')
 var db = require('./config/database')
 var routes = require('./config/routes')
 
+var port = process.env.OPENSHIFT_NODE4_PORT || 1337
+var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
-var moment = require('moment-timezone')
 var request = require('request')
 var morgan = require('morgan')
+var server = app.listen(port, ip, function () {
+  logger.info('Basil has started on http://localhost:' + port)
+  routes(app)
+})
 
-var config = require('./config')
+var moment = require('moment-timezone')
 var EventSource = require('eventsource')
 
-var channelName = 'basil'
-var channel = config[ channelName ]
-var api = {
+const CHANNEL_NAME = 'basil'
+var channel = config[ CHANNEL_NAME ]
+var api = {}
+api[ CHANNEL_NAME ] =  {
   meta: {
-    name: 'Basil',
+    description: 'Measure soil moisture and temperature for a basil plant',
     timezone: config.timezone,
     utc: config.utc,
     units: channel.units,
-    total_data: 0
-  }
+    last_data_id: 0
+  },
+  data: {}
 }
-var viewData
-
-var server = app.listen(port, ip, function () {
-  logger.info('Basil has started on http://localhost:' + port)
-
-  routes(app)
-})
 
 app.use(express.static('public'))
 app.set('view engine', 'jade')
@@ -52,77 +51,74 @@ function formatOneDecimalPlace(value) {
   return Math.round( value * 10) / 10
 }
 
-function listen(url) {
+function getSensorValues(debug, sensor) {
+  if (debug) {
+    return {
+      published_at: moment(new Date()).toISOString(),
+      temperature: 29.4,
+      battery_voltage: 3.5,
+      state_of_charge: 89,
+      battery_alert: false,
+      debug: true
+    }
+  }
+
+  var payload = JSON.parse(sensor.data)
+  var data = JSON.parse(payload.data)
+
+  return {
+    published_at: moment(payload.published_at).toISOString(),
+    temperature: normaliseTemperature(data.temperature),
+    battery_voltage: formatOneDecimalPlace(data.voltage),
+    state_of_charge: formatOneDecimalPlace(data.soc),
+    battery_alert: data.alert ? true : false,
+    debug: data.debug
+  }
+}
+
+function logData(data, channel) {
+  var log = `${new Date()} Temp: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.state_of_charge}${config[ channel ].units.state_of_charge} \tBatt alert: ${data.battery_alert}`
+
+  data.debug ? logger.info(log + '\tDebug: yes') : logger.info(log)
+}
+
+function storeDB(lastData) {
+  db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
+    var lastDataID = snapshot.val() + 1
+
+    db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
+      if (error) {
+        logger.error(error)
+      } else {
+        db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
+      }
+    })
+  })
+}
+
+function listen(url, channel) {
   var eventSource = new EventSource(url)
   eventSource.addEventListener('open', function(e) {
-    logger.info('Listening to Basil sensor now...')
+    logger.info(`Listening to ${channel} sensor now...`)
   } ,false)
 
   eventSource.addEventListener('error', function(e) {
     logger.error(e)
   } ,false);
 
-  eventSource.addEventListener('basil', function(e) {
-    var payload = JSON.parse(e.data)
-    var publishedAt = payload.published_at
-    var data = JSON.parse(payload.data)
-
-    var temperature = normaliseTemperature(data.temperature)
-    var batteryVoltage = formatOneDecimalPlace(data.voltage)
-    var stateOfCharge = formatOneDecimalPlace(data.soc)
-    var batteryAlert = data.alert ? true : false
-    var newData = {
-      published_at: moment(publishedAt).tz(config.timezone).toString(),
-      temperature: temperature,
-      battery_voltage: batteryVoltage,
-      state_of_charge: stateOfCharge,
-      battery_alert: batteryAlert
-    }
-
-    if (data.debug) {
-      newData.debug = data.debug
-      logger.info(`${new Date()} Temp: ${temperature}${config.units.temperature}\tVoltage: ${batteryVoltage}${config.units.battery_voltage}\tSOC: ${stateOfCharge}${config.units.battery_status}\tAlert: ${batteryAlert}\tDebug: yes`)
-    } else {
-      logger.info(`${new Date()} Temp: ${temperature}C\tVoltage: ${batteryVoltage}V\tSOC: ${stateOfCharge}%\tAlert: ${batteryAlert}`)
-    }
-
-    api.meta.total_data += 1
-    db.child('data').child(api.meta.total_data).setWithPriority(newData, api.meta.total_data)
-    db.child('meta/total_data').transaction(function(reply) {
-      return api.meta.total_data
-    })
-
-    viewData = newData
-    db.child('data').on('value', function(snapshot) {
-      api.data = snapshot.val()
-    })
+  eventSource.addEventListener(channel, function(e) {
+    const lastData = getSensorValues(false, e)
+    logData(lastData, CHANNEL_NAME)
+    storeDB(lastData)
   }, false)
 
   if (process.argv[2] === 'debug') {
     setInterval(function() {
-      var newData = {
-        published_at: moment().tz(config.timezone).toString(),
-        temperature: '29.4',
-        battery_voltage: '3.5',
-        state_of_charge: '89',
-        battery_alert: false,
-        debug: true
-      }
-
-      logger.info(`${new Date()} Temp: ${newData.temperature}${config[channelName].units.temperature}\tVoltage: ${newData.battery_voltage}${config[channelName].units.battery_voltage}\tSOC: ${newData.state_of_charge}${config[channelName].units.state_of_charge}\tAlert: ${newData.battery_alert}\tDebug: yes`)
-
-      api.meta.total_data += 1
-      db.child('data').child(api.meta.total_data).setWithPriority(newData, api.meta.total_data)
-      db.child('meta/total_data').transaction(function(reply) {
-        return api.meta.total_data
-      })
-
-      viewData = newData
-      db.child('data').on('value', function(snapshot) {
-        api.data = snapshot.val()
-      })
+      const lastData = getSensorValues(true)
+      logData(lastData, CHANNEL_NAME)
+      storeDB(lastData)
     }, 5000)
   }
 }
 
-listen(url())
+listen(url(), CHANNEL_NAME)

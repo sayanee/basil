@@ -4,7 +4,6 @@ var db = require('../config/database')
 var timeline = require('../lib/timeline')
 var logger = require('../config/logger')
 
-
 class Channel {
   constructor(list) {
     this.list = list
@@ -25,14 +24,15 @@ class Channel {
 
   last(channel, callback) {
     var lastData
-    var lastDataIndex
+    var lastDataID
     var awaitingMessage = 'Waiting for data...'
 
-    db.child('meta/total_data').on('value', function(snapshot) {
-      lastDataIndex = snapshot.val()
+    db.child(channel + '/meta/last_data_id').once('value', function(snapshot) {
+      lastDataID = snapshot.val()
 
-      db.child('data').on('value', function(snapshot) {
-        lastData = snapshot.val()[ lastDataIndex ]
+      db.child(channel + '/data/' + lastDataID).on('value', function(snapshot) {
+        lastData = snapshot.val()
+        
         callback({
           status: timeline.setStatus(lastData, channel) || awaitingMessage,
           datetime: timeline.getPublishedDate(lastData.published_at) || awaitingMessage,
