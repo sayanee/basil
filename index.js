@@ -11,7 +11,7 @@ var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
 var express = require('express')
 var app = express()
-var request = require('request')
+
 var morgan = require('morgan')
 var server = app.listen(port, ip, function () {
   logger.info('Basil has started on http://localhost:' + port)
@@ -51,15 +51,15 @@ function formatOneDecimalPlace(value) {
   return Math.round( value * 10) / 10
 }
 
-function getSensorValues(debug, sensor) {
-  if (debug) {
+function getSensorValues(sample, sensor) {
+  if (sample) {
     return {
       published_at: moment(new Date()).toISOString(),
       temperature: 29.4,
       battery_voltage: 3.5,
       state_of_charge: 89,
       battery_alert: false,
-      debug: true
+      sample: true
     }
   }
 
@@ -72,19 +72,20 @@ function getSensorValues(debug, sensor) {
     battery_voltage: formatOneDecimalPlace(data.voltage),
     state_of_charge: formatOneDecimalPlace(data.soc),
     battery_alert: data.alert ? true : false,
-    debug: data.debug
+    sample: data.sample
   }
 }
 
 function logData(data, channel) {
   var log = `${new Date()} Temp: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.state_of_charge}${config[ channel ].units.state_of_charge} \tBatt alert: ${data.battery_alert}`
 
-  data.debug ? logger.info(log + '\tDebug: yes') : logger.info(log)
+  data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
 
 function storeDB(lastData) {
   db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
     var lastDataID = snapshot.val() + 1
+    lastData.id = lastDataID
 
     db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
       if (error) {
@@ -107,12 +108,13 @@ function listen(url, channel) {
   } ,false);
 
   eventSource.addEventListener(channel, function(e) {
+    logger.trace(e)
     const lastData = getSensorValues(false, e)
     logData(lastData, CHANNEL_NAME)
     storeDB(lastData)
   }, false)
 
-  if (process.argv[2] === 'debug') {
+  if (process.argv[2] === 'sample') {
     setInterval(function() {
       const lastData = getSensorValues(true)
       logData(lastData, CHANNEL_NAME)
