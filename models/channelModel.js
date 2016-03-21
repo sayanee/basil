@@ -15,7 +15,7 @@ class Channel {
 
       db.child(channel + '/data').once('value', function(snapshot) {
         list.data = snapshot.val() || {}
-        if (!list.data[ 0 ]) {
+        if (!list.data[ 0 ] && list.data.length > 1) {
           list.data.shift()
         }
         callback(list)
