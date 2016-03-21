@@ -7,10 +7,6 @@ var config = require('../config')
 var moment = require('moment-timezone')
 
 class Channel {
-  constructor(list) {
-    this.list = list
-  }
-
   index(channel, callback) {
     var list = {}
 
