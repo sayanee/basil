@@ -1,12 +1,18 @@
 var socket = io.connect()
 
+var statusEl = document.getElementById('status')
+var datetimeEl = document.getElementById('datetime')
+var socEl = document.getElementById('soc')
+var batteryEl = document.getElementById('battery')
+var sampleEl = document.getElementById('sample')
+
 socket.on('data', function(data) {
-  document.getElementById('status').innerHTML = data.status
-  document.getElementById('datetime').innerHTML = data.datetime
-  document.getElementById('soc').innerHTML = data.soc
-  document.getElementById('battery').dataset.charge = data.battery_status
+  statusEl.innerHTML = data.status
+  datetimeEl.innerHTML = data.datetime
+  socEl.innerHTML = data.soc
+  batteryEl.dataset.charge = data.battery_status
 
   if (data.sample) {
-    document.getElementById('sample').innerHTML = 'sample data!'
+    sampleEl.innerHTML = 'sample data!'
   }
 })
