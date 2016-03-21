@@ -6,6 +6,7 @@ var config = require('./config')
 var logger = require('./config/logger')
 var db = require('./config/database')
 var routes = require('./config/routes')
+var timeline = require('./lib/timeline')
 
 var port = process.env.OPENSHIFT_NODE4_PORT || 1337
 var ip = process.env.OPENSHIFT_NODE4_IP || '0.0.0.0'
@@ -20,6 +21,8 @@ var server = app.listen(port, ip, function () {
 
 var moment = require('moment-timezone')
 var EventSource = require('eventsource')
+var io = require('socket.io').listen(server)
+var sockets = []
 
 const CHANNEL_NAME = 'basil'
 var channel = config[ CHANNEL_NAME ]
@@ -53,13 +56,14 @@ function formatOneDecimalPlace(value) {
 
 function getSensorValues(sample, sensor) {
   if (sample) {
+    var randomSubstract = Math.round((Math.random() * 11 + 1)/10)
     return {
       published_at: moment(new Date()).toISOString(),
-      temperature: 29.4,
-      battery_voltage: 3.5,
-      state_of_charge: 89,
+      temperature: 29.4 - randomSubstract,
+      battery_voltage: 3.5 - randomSubstract,
+      state_of_charge: 89 - randomSubstract,
       battery_alert: false,
-      sample: true
+      sample: 'sample data!'
     }
   }
 
@@ -72,7 +76,7 @@ function getSensorValues(sample, sensor) {
     battery_voltage: formatOneDecimalPlace(data.voltage),
     state_of_charge: formatOneDecimalPlace(data.soc),
     battery_alert: data.alert ? true : false,
-    sample: data.sample
+    sample: data.sample ? 'sample data!' : ''
   }
 }
 
@@ -93,6 +97,16 @@ function storeDB(lastData) {
       } else {
         db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
       }
+    })
+  })
+
+  sockets.forEach(function(eachSocket, index) {
+    eachSocket.emit('data', {
+      status: timeline.setStatus(lastData, CHANNEL_NAME),
+      datetime: timeline.getPublishedDate(lastData.published_at),
+      soc: timeline.getSOC(lastData.state_of_charge, CHANNEL_NAME),
+      battery_status: timeline.getBatteryStatus(lastData.state_of_charge),
+      sample: lastData.sample
     })
   })
 }
@@ -122,5 +136,9 @@ function listen(url, channel) {
     }, 5000)
   }
 }
+
+io.on('connection', function (reply) {
+  sockets.push(reply)
+})
 
 listen(url(), CHANNEL_NAME)
