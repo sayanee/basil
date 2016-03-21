@@ -31,8 +31,7 @@ api[ CHANNEL_NAME ] =  {
     utc: config.utc,
     units: channel.units,
     last_data_id: 0
-  },
-  data: {}
+  }
 }
 
 app.use(express.static('public'))
