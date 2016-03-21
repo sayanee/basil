@@ -26,7 +26,8 @@ var channel = config[ CHANNEL_NAME ]
 var api = {}
 api[ CHANNEL_NAME ] =  {
   meta: {
-    description: 'Measure soil moisture and temperature for a basil plant',
+    name: 'basil',
+    description: 'measure soil moisture and temperature for a basil plant',
     timezone: config.timezone,
     utc: config.utc,
     units: channel.units,
