@@ -14,11 +14,15 @@ class Channel {
       list.meta = snapshot.val()
 
       db.child(channel + '/data').once('value', function(snapshot) {
-        list.data = snapshot.val()
-        if (!list.data[ 0 ]) {
-          list.data.shift()
+        if (!snapshot.val()) {
+          return callback(list)
         }
 
+        if (!snapshot.val()[ 0 ]) {
+          return callback(list)
+        }
+
+        list.data = snapshot.val()
         callback(list)
       })
     })
