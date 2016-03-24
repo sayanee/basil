@@ -7,7 +7,8 @@ if (location.hostname !== 'localhost') {
     socketAddress = 'ws://' + location.hostname + ':8000';
   }
 }
-var socket = io.connect()
+console.log(`Connecting to ${socketAddress}...`)
+var socket = io.connect(socketAddress)
 
 var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
@@ -16,7 +17,7 @@ var batteryEl = document.getElementById('battery')
 
 function addSampleDataStatus(sample) {
   var sampleEl = document.getElementById('sample')
-  
+
   if (!sample) {
     if (sampleEl) {
       sampleEl.remove()

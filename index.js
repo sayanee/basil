@@ -141,6 +141,7 @@ function listen(url, channel) {
 }
 
 io.on('connection', function (reply) {
+  logger.trace('New connection')
   sockets.push(reply)
 })
 
