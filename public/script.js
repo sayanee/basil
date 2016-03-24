@@ -1,12 +1,10 @@
 var socketAddress = ''
 
 if (location.hostname !== 'localhost') {
-  var hostname = 'basil.sayan.ee'
-
   if (location.protocol === 'https:') {
-    socketAddress = 'wss://' + hostname + ':8443'
+    socketAddress = 'wss://' + location.hostname + ':8443'
   } else {
-    socketAddress = 'ws://' + hostname + ':8000'
+    socketAddress = 'ws://' + location.hostname + ':8000'
   }
 }
 
