@@ -10,7 +10,6 @@ if (location.hostname !== 'localhost') {
   }
 }
 
-console.log(`Connecting to ${socketAddress}...`)
 var socket = io.connect(socketAddress, {
   'forceNew': true,
   'transports': ['websocket']
@@ -27,8 +26,8 @@ function addSampleDataStatus(sample) {
   if (!sample) {
     if (sampleEl) {
       sampleEl.remove()
-      return
     }
+    return
   }
 
   var sampleText = 'sample data!'

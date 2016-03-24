@@ -1,0 +1,147 @@
+.battery
+  color: #34495e
+  border-color: #34495e
+  border-width: 1px
+  border-style: solid
+  display: inline-block
+  width: 22px
+  height: 12px
+  position: relative
+  border-radius: 2px
+  box-sizing: border-box
+  margin: 5px
+
+.battery::after, .battery::before
+  background-color: #34495e
+
+.battery::before, .battery::after
+  content: ""
+  position: absolute
+
+.battery::before
+  top: 3px
+  bottom: 3px
+  right: -4px
+  width: 2px
+  box-sizing: border-box
+  border-radius: 3px
+  border-top-left-radius: 0
+  border-bottom-left-radius: 0
+
+.battery::after
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  margin: 1px
+  border-radius: 1px
+  background-color: currentColor
+
+.battery[data-charge='1']
+  color: #c0392b
+  border-color: #c0392b
+
+.battery[data-charge='1']::after, .battery[data-charge='1']::before
+  background-color: #c0392b
+
+.battery[data-charge='1']::after
+  right: 90%
+
+.battery[data-charge='2']
+  color: #c0392b
+  border-color: #c0392b
+
+.battery[data-charge='2']::after,
+.battery[data-charge='2']::before
+  background-color: #c0392b
+
+.battery[data-charge='2']::after
+  right: 80%
+
+.battery[data-charge='3']
+  color: #c0392b
+  border-color: #c0392b
+
+.battery[data-charge='3']::after,
+.battery[data-charge='3']::before
+  background-color: #c0392b
+
+.battery[data-charge='3']::after
+  right: 70%
+
+.battery[data-charge='4']
+  color: #f39c12
+  border-color: #f39c12
+
+.battery[data-charge='4']::after,
+.battery[data-charge='4']::before
+  background-color: #f39c12
+
+.battery[data-charge='4']::after
+  right: 60%
+
+.battery[data-charge='5']
+  color: #f39c12
+  border-color: #f39c12
+
+.battery[data-charge='5']::after,
+.battery[data-charge='5']::before
+  background-color: #f39c12
+
+.battery[data-charge='5']::after
+  right: 50%
+
+.battery[data-charge='6']
+  color: #f39c12
+  border-color: #f39c12
+
+.battery[data-charge='6']::after,
+.battery[data-charge='6']::before
+  background-color: #f39c12
+
+.battery[data-charge='6']::after
+  right: 40%
+
+.battery[data-charge='7']
+  color: #27ae60
+  border-color: #27ae60
+
+.battery[data-charge='7']::after,
+.battery[data-charge='7']::before
+  background-color: #27ae60
+
+.battery[data-charge='7']::after
+  right: 30%
+
+.battery[data-charge='8']
+  color: #27ae60
+  border-color: #27ae60
+
+.battery[data-charge='8']::after,
+.battery[data-charge='8']::before
+  background-color: #27ae60
+
+.battery[data-charge='8']::after
+  right: 20%
+
+.battery[data-charge='9']
+  color: #27ae60
+  border-color: #27ae60
+
+.battery[data-charge='9']::after,
+.battery[data-charge='9']::before
+  background-color: #27ae60
+
+.battery[data-charge='9']::after
+  right: 10%
+
+.battery[data-charge='10']
+  color: #27ae60
+  border-color: #27ae60
+
+.battery[data-charge='10']::after,
+.battery[data-charge='10']::before
+  background-color: #27ae60
+
+.battery[data-charge='10']::after
+  right: 0%
