@@ -6,7 +6,8 @@ module.exports = {
     "units": {
       "temperature": "°C",
       "battery_voltage": "V",
-      "battery_state_of_charge": "%"
+      "battery_state_of_charge": "%",
+      "published_at": "ISO 8601 Date and time in UTC"
     },
     "trigger": 2500,
     "change": 500
