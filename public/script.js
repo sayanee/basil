@@ -1,7 +1,7 @@
 var socketAddress = ''
 
 if (location.hostname !== 'localhost') {
-  var hostname = 'basil-sayanee.rhcloud.com'
+  var hostname = 'basil.sayan.ee'
 
   if (location.protocol === 'https:') {
     socketAddress = 'wss://' + hostname + ':8443'
