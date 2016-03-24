@@ -8,7 +8,10 @@ var sampleEl = document.getElementById('sample')
 
 function addSampleDataStatus(sample) {
   if (!sample) {
-    return
+    if (sampleEl) {
+      sampleEl.remove()
+      return
+    }
   }
 
   var sampleText = 'sample data!'

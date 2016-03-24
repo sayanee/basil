@@ -121,7 +121,6 @@ function listen(url, channel) {
   } ,false);
 
   eventSource.addEventListener(channel, function(e) {
-    logger.trace(e)
     const lastData = getSensorValues(false, e)
     logData(lastData, CHANNEL_NAME)
     storeDB(lastData)
