@@ -61,7 +61,7 @@ function getSensorValues(sample, sensor) {
       published_at: moment(new Date()).toISOString(),
       temperature: 29.4 - randomSubstract,
       battery_voltage: 3.5 - randomSubstract,
-      state_of_charge: 89 - randomSubstract,
+      battery_state_of_charge: 89 - randomSubstract,
       battery_alert: false,
       sample: 'sample data!'
     }
@@ -74,14 +74,14 @@ function getSensorValues(sample, sensor) {
     published_at: moment(payload.published_at).toISOString(),
     temperature: normaliseTemperature(data.temperature),
     battery_voltage: formatOneDecimalPlace(data.voltage),
-    state_of_charge: formatOneDecimalPlace(data.soc),
+    battery_state_of_charge: formatOneDecimalPlace(data.soc),
     battery_alert: data.alert ? true : false,
     sample: data.sample ? 'sample data!' : ''
   }
 }
 
 function logData(data, channel) {
-  var log = `${new Date()} Temp: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.state_of_charge}${config[ channel ].units.state_of_charge} \tBatt alert: ${data.battery_alert}`
+  var log = `${new Date()} Temp: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config[ channel ].units.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
 
   data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
@@ -104,8 +104,8 @@ function storeDB(lastData) {
     eachSocket.emit('data', {
       status: timeline.setStatus(lastData, CHANNEL_NAME),
       datetime: timeline.getPublishedDate(lastData.published_at),
-      soc: timeline.getSOC(lastData.state_of_charge, CHANNEL_NAME),
-      battery_status: timeline.getBatteryStatus(lastData.state_of_charge),
+      soc: timeline.getSOC(lastData.battery_state_of_charge, CHANNEL_NAME),
+      battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
       sample: lastData.sample
     })
   })

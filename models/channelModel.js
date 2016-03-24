@@ -46,8 +46,8 @@ class Channel {
         return callback({
           status: timeline.setStatus(lastData, channel),
           datetime: timeline.getPublishedDate(lastData.published_at),
-          soc: timeline.getSOC(lastData.state_of_charge, channel),
-          battery_status: timeline.getBatteryStatus(lastData.state_of_charge),
+          soc: timeline.getSOC(lastData.battery_state_of_charge, channel),
+          battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
           sample: lastData.sample
         })
       })
