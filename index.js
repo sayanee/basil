@@ -99,7 +99,7 @@ function storeDB(lastData) {
         logger.error(error)
       } else {
         db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
-        db.child(CHANNEL_NAME + '/meta/generated_at').set(currentDatetimeISO())
+        db.child(CHANNEL_NAME + '/meta/published_at').set(currentDatetimeISO())
       }
     })
   })
