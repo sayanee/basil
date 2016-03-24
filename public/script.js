@@ -11,7 +11,10 @@ if (location.hostname !== 'localhost') {
 }
 
 console.log(`Connecting to ${socketAddress}...`)
-var socket = io.connect(socketAddress)
+var socket = io.connect(socketAddress, {
+  'forceNew': true,
+  'transports': ['websocket']
+})
 
 var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
