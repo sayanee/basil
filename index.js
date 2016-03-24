@@ -15,7 +15,7 @@ var app = express()
 
 var morgan = require('morgan')
 var server = app.listen(port, ip, function () {
-  logger.info('Basil has started on http://localhost:' + port)
+  logger.info(`Basil has started on http://${ip}:${port}`)
   routes(app)
 })
 
