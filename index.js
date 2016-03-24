@@ -63,7 +63,7 @@ function getSensorValues(sample, sensor) {
       battery_voltage: 3.5 - randomSubstract,
       battery_state_of_charge: 89 - randomSubstract,
       battery_alert: false,
-      sample: 'sample data!'
+      sample: true
     }
   }
 
@@ -75,8 +75,7 @@ function getSensorValues(sample, sensor) {
     temperature: normaliseTemperature(data.temperature),
     battery_voltage: formatOneDecimalPlace(data.voltage),
     battery_state_of_charge: formatOneDecimalPlace(data.soc),
-    battery_alert: data.alert ? true : false,
-    sample: data.sample ? 'sample data!' : ''
+    battery_alert: data.alert ? true : false
   }
 }
 

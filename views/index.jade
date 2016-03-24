@@ -18,7 +18,8 @@ html(lang="en")
       p#status !{status}
       span#datetime=datetime
       span#soc=soc
-      span#sample=sample
+      if sample 
+        span#sample sample data!
         
       div(id="battery" class="battery" data-charge="#{battery_status}")
         
