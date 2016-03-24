@@ -54,11 +54,15 @@ function formatOneDecimalPlace(value) {
   return Math.round( value * 10) / 10
 }
 
+function currentDatetimeISO() {
+  return moment(new Date()).toISOString()
+}
+
 function getSensorValues(sample, sensor) {
   if (sample) {
     var randomSubstract = Math.round((Math.random() * 11 + 1)/10)
     return {
-      published_at: moment(new Date()).toISOString(),
+      published_at: currentDatetimeISO(),
       temperature: 29.4 - randomSubstract,
       battery_voltage: 3.5 - randomSubstract,
       battery_state_of_charge: 89 - randomSubstract,
@@ -95,6 +99,7 @@ function storeDB(lastData) {
         logger.error(error)
       } else {
         db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
+        db.child(CHANNEL_NAME + '/meta/generated_at').set(currentDatetimeISO())
       }
     })
   })
