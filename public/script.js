@@ -1,4 +1,13 @@
-var socket = io.connect()
+var socketAddress = '';
+if (location.hostname !== 'localhost') {
+  // For OpenShift Deployment socket connection
+  if (location.protocol === 'https:') {
+    socketAddress = 'wss://' + location.hostname + ':8443';
+  } else {
+    socketAddress = 'ws://' + location.hostname + ':8000';
+  }
+}
+var socket = io.connect(socketAddress);
 
 var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
