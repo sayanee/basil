@@ -1,4 +1,4 @@
-var socket = io.connect()
+var socket = io.connect('https://basil-sayanee.rhcloud.com:8080') || io.connect()
 
 var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
