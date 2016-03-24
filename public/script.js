@@ -1,4 +1,4 @@
-var socket = io.connect('https://basil.sayan.ee:8000', {'forceNew':true }) || io.connect()
+var socket = io.connect()
 
 var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
