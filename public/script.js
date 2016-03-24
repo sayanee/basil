@@ -1,12 +1,15 @@
-var socketAddress = '';
+var socketAddress = ''
+
 if (location.hostname !== 'localhost') {
-  // For OpenShift Deployment socket connection
+  var hostname = 'basil-sayanee.rhcloud.com'
+
   if (location.protocol === 'https:') {
-    socketAddress = 'wss://' + location.hostname + ':8443';
+    socketAddress = 'wss://' + hostname + ':8443'
   } else {
-    socketAddress = 'ws://' + location.hostname + ':8000';
+    socketAddress = 'ws://' + hostname + ':8000'
   }
 }
+
 console.log(`Connecting to ${socketAddress}...`)
 var socket = io.connect(socketAddress)
 
