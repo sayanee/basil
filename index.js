@@ -84,7 +84,7 @@ function getSensorValues(sample, sensor) {
 }
 
 function logData(data, channel) {
-  var log = `${new Date()} Temp: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config[ channel ].units.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
+  var log = `${CHANNEL_NAME} update - Temperature: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config[ channel ].units.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
 
   data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
