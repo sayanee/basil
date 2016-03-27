@@ -56,7 +56,7 @@ void publishData(int delayTime, bool debugMode) {
 
     sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
   } else {
-    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"debug\":true}", analog, voltage, soc, alert);
+    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"sample\":true}", analog, voltage, soc, alert);
   }
 
   Particle.publish("basil", analogStr);
