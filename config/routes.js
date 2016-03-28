@@ -8,7 +8,6 @@ const CHANNEL_NAME = 'basil'
 module.exports = function(app) {
   app.get('/', function(req, res) {
     channel.last(CHANNEL_NAME, function(renderData) {
-      renderData.debug = false
       res.render('index', renderData)
     })
   })
