@@ -25,15 +25,15 @@ var io = require('socket.io').listen(server)
 var sockets = []
 
 const CHANNEL_NAME = 'basil'
-var channel = config[ CHANNEL_NAME ]
+var channel = config.channels[ CHANNEL_NAME ]
 var api = {}
 api[ CHANNEL_NAME ] =  {
   meta: {
     name: 'basil',
     description: 'measure soil moisture and temperature for a basil plant',
-    timezone: config.timezone,
-    utc: config.utc,
-    units: channel.units,
+    timezone: config.meta.timezone,
+    utc: config.meta.utc,
+    measurements: config.meta.measurements,
     last_data_id: 0
   }
 }
@@ -43,7 +43,7 @@ app.set('view engine', 'jade')
 app.use(morgan('log: \t:date[clf] :method :url, HTTP :http-version, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr'))
 
 function url() {
-  return channel.baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
+  return config.channels[ CHANNEL_NAME ].baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
 }
 
 function normaliseTemperature(value) {
