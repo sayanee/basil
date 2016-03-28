@@ -121,7 +121,7 @@ function storeDB(lastData) {
   sockets.forEach(function(eachSocket, index) {
     eachSocket.emit('data', {
       status: timeline.setStatus(lastData, CHANNEL_NAME),
-      datetime: timeline.getPublishedDate(lastData.published_at),
+      datetime: timeline.getRelativeDate(lastData.published_at),
       soc: timeline.getSOC(lastData.battery_state_of_charge, CHANNEL_NAME),
       battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
       sample: lastData.sample

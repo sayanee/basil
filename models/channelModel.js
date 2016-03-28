@@ -37,7 +37,7 @@ class Channel {
           var initialMessage = 'Waiting for the first data!'
           return callback({
             status: initialMessage,
-            datetime: moment(new Date()).tz(config.timezone).format('MMM D, h:mm a'),
+            datetime: timeline.getRelativeDate(),
             soc: initialMessage,
             battery_status: initialMessage
           })
@@ -45,7 +45,7 @@ class Channel {
 
         return callback({
           status: timeline.setStatus(lastData, channel),
-          datetime: timeline.getPublishedDate(lastData.published_at),
+          datetime: timeline.getRelativeDate(lastData.published_at),
           soc: timeline.getSOC(lastData.battery_state_of_charge, channel),
           battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
           sample: lastData.sample
