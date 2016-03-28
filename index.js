@@ -64,22 +64,29 @@ function getSensorValues(sample, sensor) {
     return {
       published_at: currentDatetimeISO(),
       temperature: 29.4 - randomSubstract,
-      battery_voltage: 3.5 - randomSubstract,
-      battery_state_of_charge: 89 - randomSubstract,
+      battery_voltage: 4.2,
+      battery_state_of_charge: 100,
       battery_alert: false,
-      sample: true
+      sample: 'This is a sample sensor value.'
     }
   }
 
   var payload = JSON.parse(sensor.data)
   var data = JSON.parse(payload.data)
 
-  return {
+  var json = {
     published_at: moment(payload.published_at).toISOString(),
     temperature: normaliseTemperature(data.temperature),
     battery_voltage: formatOneDecimalPlace(data.voltage),
     battery_state_of_charge: formatOneDecimalPlace(data.soc),
     battery_alert: data.alert ? true : false
+  }
+
+  if (!data.sample) {
+    return json
+  } else {
+    json.sample = 'This is a debug sensor value logged every 5 seconds.'
+    return json
   }
 }
 
@@ -90,11 +97,14 @@ function logData(data, channel) {
 }
 
 function storeDB(lastData) {
+  logger.trace('Store in DB:')
   db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
     var lastDataID = snapshot.val() + 1
     lastData.id = lastDataID
 
+    //
     db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
+      logger.trace('Set value: ' + lastDataID)
       if (error) {
         logger.error(error)
       } else {
@@ -127,6 +137,7 @@ function listen(url, channel) {
 
   eventSource.addEventListener(channel, function(e) {
     const lastData = getSensorValues(false, e)
+    logger.trace('Value from sensor')
     logData(lastData, CHANNEL_NAME)
     storeDB(lastData)
   }, false)
@@ -134,9 +145,10 @@ function listen(url, channel) {
   if (process.argv[2] === 'sample') {
     setInterval(function() {
       const lastData = getSensorValues(true)
+      logger.trace('Value from generated sample')
       logData(lastData, CHANNEL_NAME)
       storeDB(lastData)
-    }, 5000)
+    }, channel.sampleInterval)
   }
 }
 

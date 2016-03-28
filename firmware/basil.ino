@@ -32,7 +32,7 @@ void loop()
       publishData(5000, false);
       System.sleep(WAKEUP_PIN, RISING, 3595); // 1 hour - 5 seconds
     } else if (digitalRead(DEBUG_PIN) == HIGH) {
-      publishData(3000, true);
+      publishData(10000, true);
     }
   }
 }
