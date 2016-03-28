@@ -85,7 +85,7 @@ function getSensorValues(sample, sensor) {
   if (!data.sample) {
     return json
   } else {
-    json.sample = 'This is a debug sensor value logged every 5 seconds.'
+    json.sample = 'This is a debug sensor value logged every 10 seconds.'
     return json
   }
 }
@@ -97,19 +97,23 @@ function logData(data, channel) {
 }
 
 function storeDB(lastData) {
-  logger.trace('Store in DB:')
   db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
-    var lastDataID = snapshot.val() + 1
-    lastData.id = lastDataID
+    db.child(CHANNEL_NAME + '/data/' + snapshot.val()).once('value', function(snapshot) {
+      if (lastData.published_at !== snapshot.val().published_at
+        && lastData.temperature !== snapshot.val().temperature) {
+        logger.trace('Store in DB:')
+        var lastDataID = snapshot.val() + 1
+        lastData.id = lastDataID
 
-    //
-    db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
-      logger.trace('Set value: ' + lastDataID)
-      if (error) {
-        logger.error(error)
-      } else {
-        db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
-        db.child(CHANNEL_NAME + '/meta/published_at').set(currentDatetimeISO())
+        db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
+          logger.trace('Set value: ' + lastDataID)
+          if (error) {
+            logger.error(error)
+          } else {
+            db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
+            db.child(CHANNEL_NAME + '/meta/published_at').set(currentDatetimeISO())
+          }
+        })
       }
     })
   })
