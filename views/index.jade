@@ -17,12 +17,13 @@ html(lang="en")
 
     .status
       p#status !{status}
-      span#datetime=datetime
+      span#datetime(data-datetime="#{datetime}")
       span#soc=soc
       if sample 
         span#sample sample data!
         
       div(id="battery" class="battery" data-charge="#{battery_status}")
         
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js")    
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js")   
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js") 
     script(src="script.js")

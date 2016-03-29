@@ -45,9 +45,15 @@ function addSampleDataStatus(sample) {
 
 socket.on('data', function(data) {
   statusEl.innerHTML = data.status
-  datetimeEl.innerHTML = data.datetime
   socEl.innerHTML = data.soc
   batteryEl.dataset.charge = data.battery_status
 
+  datetimeEl.dataset.datetime = data.datetime
+  datetimeEl.innerHTML = moment(datetimeEl.dataset.datetime).fromNow()
+  
   addSampleDataStatus(data.sample)
 })
+
+window.setInterval(function() {
+  datetimeEl.innerHTML = moment(datetimeEl.dataset.datetime).fromNow()
+}, 60000)
