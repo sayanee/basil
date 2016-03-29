@@ -91,22 +91,23 @@ function getSensorValues(sample, sensor) {
 }
 
 function logData(data, channel) {
-  var log = `${CHANNEL_NAME} update - Temperature: ${data.temperature}${config[ channel ].units.temperature}\tVoltage: ${data.battery_voltage}${config[ channel ].units.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config[ channel ].units.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
+  var log = `${CHANNEL_NAME} update - Temperature: ${data.temperature}${config.meta.measurements.temperature}\tVoltage: ${data.battery_voltage}${config.meta.measurements.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config.meta.measurements.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
 
   data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
 
 function storeDB(lastData) {
   db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
-    db.child(CHANNEL_NAME + '/data/' + snapshot.val()).once('value', function(snapshot) {
+    var lastDataID = snapshot.val()
+
+    db.child(CHANNEL_NAME + '/data/' + lastDataID).once('value', function(snapshot) {
       if (lastData.published_at !== snapshot.val().published_at
         && lastData.temperature !== snapshot.val().temperature) {
-        logger.trace('Store in DB:')
-        var lastDataID = snapshot.val() + 1
+
+        lastDataID += 1
         lastData.id = lastDataID
 
         db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
-          logger.trace('Set value: ' + lastDataID)
           if (error) {
             logger.error(error)
           } else {
@@ -121,7 +122,7 @@ function storeDB(lastData) {
   sockets.forEach(function(eachSocket, index) {
     eachSocket.emit('data', {
       status: timeline.setStatus(lastData, CHANNEL_NAME),
-      datetime: timeline.getRelativeDate(lastData.published_at),
+      datetime: timeline.getPublishedDate(lastData.published_at),
       soc: timeline.getSOC(lastData.battery_state_of_charge, CHANNEL_NAME),
       battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
       sample: lastData.sample
@@ -141,7 +142,6 @@ function listen(url, channel) {
 
   eventSource.addEventListener(channel, function(e) {
     const lastData = getSensorValues(false, e)
-    logger.trace('Value from sensor')
     logData(lastData, CHANNEL_NAME)
     storeDB(lastData)
   }, false)
@@ -149,10 +149,9 @@ function listen(url, channel) {
   if (process.argv[2] === 'sample') {
     setInterval(function() {
       const lastData = getSensorValues(true)
-      logger.trace('Value from generated sample')
       logData(lastData, CHANNEL_NAME)
       storeDB(lastData)
-    }, channel.sampleInterval)
+    }, 10000)
   }
 }
 

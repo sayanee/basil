@@ -2,7 +2,6 @@ module.exports = {
   "meta": {
     "utc": "+0800",
     "timezone": "Asia/Singapore",
-    "sampleInterval": 10000,
     "measurements": {
       "temperature": "°C",
       "soil_moisture": "%",
