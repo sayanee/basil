@@ -38,6 +38,7 @@ class Channel {
           return callback({
             status: initialMessage,
             datetime: timeline.getPublishedDate(),
+            datetime_relative: initialMessage,
             soc: initialMessage,
             battery_status: initialMessage
           })
@@ -46,6 +47,7 @@ class Channel {
         return callback({
           status: timeline.setStatus(lastData, channel),
           datetime: timeline.getPublishedDate(lastData.published_at),
+          datetime_relative: moment(timeline.getPublishedDate(lastData.published_at)).fromNow(),
           soc: timeline.getSOC(lastData.battery_state_of_charge, channel),
           battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
           sample: lastData.sample
