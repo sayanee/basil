@@ -7,7 +7,7 @@
   "scripts": {
     "build": "stylus public/css/style.styl --compress --out public --watch",
     "sample": "node index sample",
-    "deploy": "git push production master",
+    "deploy": "git push production master && rhc app-force-stop --app basil && rhc deploy master --app basil",
     "start": "node index",
     "log": "rhc tail -o '-n 200' -a basil",
     "test": "echo \"Error: no test specified\" && exit 1"
