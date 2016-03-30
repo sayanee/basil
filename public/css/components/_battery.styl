@@ -9,7 +9,9 @@
   position: relative
   border-radius: 2px
   box-sizing: border-box
-  margin: 5px
+  margin: 4px 10px
+  vertical-align: top
+  opacity: .5
 
 .battery::after, .battery::before
   background-color: #34495e
@@ -145,3 +147,17 @@
 
 .battery[data-charge='10']::after
   right: 0%
+
+.helptext-battery
+  margin: -5px 30px
+  position: absolute
+  color: #000
+  font-size: .8em
+  display: none
+  width: 50px
+
+.battery:hover
+  cursor: pointer
+  opacity: 1
+  .helptext-battery
+    display: inline
