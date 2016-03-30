@@ -7,15 +7,41 @@
 
 .status
   list-style-type: none
-  padding: 1em
-  background: aliceblue
-  border: 2px solid wheat
-  border-radius: 5px
   position: relative
-  span
-    text-align: right
-    font-size: .8em
-    background: wheat
-    padding: .3em .5em
-    float: right
-    margin: -1em 0 0 .4em
+  display: flex
+  x-justify-content: space-around
+  x-align-items: stretch
+  max-width: 800px
+  p
+    margin: 0
+
+.status-left
+  width: 150px
+  flex: 0 0 150px
+  border-right: 1px solid #ddd
+  position: relative
+  &:after
+    content: ""
+    position: absolute
+    right: -8px
+    top: -6px
+    display: block
+    background: #eee
+    width: 8px
+    height: 8px
+    border-radius: 50%
+    border: 3px solid white
+
+.status-right
+  border-top: 1px solid #eee
+  width: 100%
+  padding: 2em
+  font-size: 1.2em
+
+.datetime
+  display: block
+  text-align: right
+  text-align: center
+  margin-top: -10px
+  color: #ccc
+  font-style: italic

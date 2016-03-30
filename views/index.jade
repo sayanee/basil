@@ -18,17 +18,21 @@ html(lang="en")
     .container
       ul.timeline
         li.status
-          p#status !{status}
-          span(id="datetime", data-datetime="#{datetime}") #{datetime_relative}
-          span#soc=soc
-          if sample 
-            span#sample sample data!
-          div(id="battery" class="battery" data-charge="#{battery_status}")
+          .status-left
+            span(class="datetime", id="datetime", data-datetime="#{datetime}") #{datetime_relative}
+          .status-right
+            p#status !{status}
+            span#soc=soc
+            if sample 
+              span#sample sample data!
+            div(id="battery" class="battery" data-charge="#{battery_status}")
         li.status
-          p My temperature is <strong>28.8°C</strong>, battery voltage is <strong>3.8V</strong>
-          span(data-datetime="2016-03-29T23:24:23.037Z") 4 hours ago
-          span Battery 90%
-          div(class="battery" data-charge="9")
+          .status-left
+            span(class="datetime", data-datetime="2016-03-29T23:24:23.037Z") 4 hours ago
+          .status-right
+            p My temperature is <strong>28.8°C</strong>, battery voltage is <strong>3.8V</strong>
+            span Battery 90%
+            div(class="battery" data-charge="9")
         
     script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js")   
     script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js") 
