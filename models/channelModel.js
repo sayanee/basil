@@ -50,7 +50,9 @@ class Channel {
           datetime_relative: moment(timeline.getPublishedDate(lastData.published_at)).fromNow(),
           soc: timeline.getSOC(lastData.battery_state_of_charge, channel),
           battery_status: timeline.getBatteryStatus(lastData.battery_state_of_charge),
-          sample: lastData.sample
+          sample: lastData.sample,
+          need_charge: lastData.battery_alert,
+          need_water: false
         })
       })
     })
