@@ -24,7 +24,7 @@ function addSampleDataStatus(sample) {
   var sampleEl = document.getElementById('sample')
 
   if (!sample && sampleEl) {
-    return sampleEl.remove()    
+    return sampleEl.remove()
   }
 
   var sampleText = 'sample data!'
@@ -56,12 +56,15 @@ window.setInterval(function() {
 }, 60000)
 
 // plot graph
-var margin = {top: 5, right: 5, bottom: 5, left: 5}
+var margin = {top: 5, right: 5, bottom: 20, left: 5}
 var width = 500 - margin.left - margin.right
-var height = 50 - margin.top - margin.bottom
+var height = 60 - margin.top - margin.bottom
 
 var parseDate = d3.time.format('%Y%m%d%H%S').parse
-
+var bisectDate = d3.bisector(function (d) { return d.date }).left
+var formatDate = function (d) {
+  return d.temperature + '°C on ' + moment(d.date).format('MMM DD, HH:mm[h]')
+}
 var x = d3.time.scale()
   .range([0, width])
 
@@ -116,4 +119,41 @@ d3.json('/api', function(error, reply) {
   .attr('clip-path', function(d) { return 'url(#clip-' + d + ')'; })
   .datum(data)
   .attr('d', line)
+
+  var focus = svg.append('g')
+    .attr('class', 'focus')
+    .style('display', 'block')
+    .append('circle')
+    .attr('r', 4)
+
+  var label = svg.append('text')
+
+  svg.append('rect')
+    .attr('class', 'overlay')
+    .attr('width', width)
+    .attr('height', height)
+    .on('mouseover', function () {
+      focus.style('display', null)
+      label.style('display', null)
+    })
+    .on('mouseout', function () {
+      focus.style('display', 'none')
+      label.style('display', 'none')
+    })
+    .on('mousemove', mousemove)
+
+  function mousemove () {
+    var x0 = x.invert(d3.mouse(this)[0])
+    var i = bisectDate(data, x0, 1)
+    var d0 = data[i - 1]
+    var d1 = data[i]
+    var d = x0 - d0.date > d1.date - x0 ? d1 : d0
+
+    focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
+    svg.select('text')
+      .text(formatDate(d))
+      .attr('class', 'label')
+      .attr('dx', '2px')
+      .attr('dy', '50px')
+  }
 })
