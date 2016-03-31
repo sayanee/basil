@@ -33,6 +33,7 @@ html(lang="en")
             p#status !{status}
             if sample 
               span#sample sample data!
+            .graph#graph
             
         li.status
           .status-left
@@ -42,7 +43,8 @@ html(lang="en")
               span(class="battery" data-charge="9")
                 span(class="helptext-battery") 90% left
             p My temperature is <strong>28.8°C</strong>, battery voltage is <strong>4.2V</strong>
-                                
+          
     script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js")   
     script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js") 
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js")
     script(src="script.js")
