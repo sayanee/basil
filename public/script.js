@@ -128,9 +128,11 @@ d3.json('/api', function(error, reply) {
   .style('display', 'block')
   .append('circle')
   .attr('r', 4)
+  .style('display', 'none')
 
   var label = svg.append('text')
-
+    .style('display', 'none')
+  
   svg.append('rect')
     .attr('class', 'overlay')
     .attr('width', width)
