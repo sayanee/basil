@@ -23,11 +23,8 @@ var batteryEl = document.getElementById('battery')
 function addSampleDataStatus(sample) {
   var sampleEl = document.getElementById('sample')
 
-  if (!sample) {
-    if (sampleEl) {
-      sampleEl.remove()
-    }
-    return
+  if (!sample && sampleEl) {
+    return sampleEl.remove()    
   }
 
   var sampleText = 'sample data!'
