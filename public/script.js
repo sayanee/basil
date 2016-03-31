@@ -73,8 +73,8 @@ var y = d3.scale.linear()
 
 var line = d3.svg.line()
   .interpolate('basis')
-  .x(function(d) { return x(d.date); })
-  .y(function(d) { return y(d.temperature); })
+  .x(function(d) { return x(d.date) })
+  .y(function(d) { return y(d.temperature) })
 
 var svg = d3.select('#graph')
   .append('svg')
@@ -121,10 +121,10 @@ d3.json('/api', function(error, reply) {
   .attr('d', line)
 
   var focus = svg.append('g')
-    .attr('class', 'focus')
-    .style('display', 'block')
-    .append('circle')
-    .attr('r', 4)
+  .attr('class', 'focus')
+  .style('display', 'block')
+  .append('circle')
+  .attr('r', 4)
 
   var label = svg.append('text')
 
@@ -151,9 +151,9 @@ d3.json('/api', function(error, reply) {
 
     focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
     svg.select('text')
-      .text(formatDate(d))
-      .attr('class', 'label')
-      .attr('dx', '2px')
-      .attr('dy', '50px')
+    .text(formatDate(d))
+    .attr('class', 'label')
+    .attr('dx', '2px')
+    .attr('dy', '50px')
   }
 })
