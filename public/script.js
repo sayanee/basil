@@ -97,43 +97,44 @@ d3.json('/api', function(error, reply) {
     }
   })
 
-  x.domain([data[0].date, data[data.length - 1].date]);
-  y.domain(d3.extent(data, function(d) { return d.temperature }))
+  function drawGraph() {
+    x.domain([data[0].date, data[data.length - 1].date]);
+    y.domain(d3.extent(data, function(d) { return d.temperature }))
 
-  var limit = y(29)
+    var limit = y(29)
 
-  svg.append('clipPath')
-  .attr('id', 'clip-above')
-  .append('rect')
-  .attr('width', width)
-  .attr('height', limit)
+    svg.append('clipPath')
+    .attr('id', 'clip-above')
+    .append('rect')
+    .attr('width', width)
+    .attr('height', limit)
 
-  svg.append('clipPath')
-  .attr('id', 'clip-below')
-  .append('rect')
-  .attr('y', limit)
-  .attr('width', width)
-  .attr('height', height - limit)
+    svg.append('clipPath')
+    .attr('id', 'clip-below')
+    .append('rect')
+    .attr('y', limit)
+    .attr('width', width)
+    .attr('height', height - limit)
 
-  svg.selectAll('.line')
-  .data(['above', 'below'])
-  .enter().append('path')
-  .attr('class', function(d) { return 'line ' + d; })
-  .attr('clip-path', function(d) { return 'url(#clip-' + d + ')'; })
-  .datum(data)
-  .attr('d', line)
+    svg.selectAll('.line')
+    .data(['above', 'below'])
+    .enter().append('path')
+    .attr('class', function(d) { return 'line ' + d; })
+    .attr('clip-path', function(d) { return 'url(#clip-' + d + ')'; })
+    .datum(data)
+    .attr('d', line)
 
-  var focus = svg.append('g')
-  .attr('class', 'focus')
-  .style('display', 'block')
-  .append('circle')
-  .attr('r', 4)
-  .style('display', 'none')
-
-  var label = svg.append('text')
+    var focus = svg.append('g')
+    .attr('class', 'focus')
+    .style('display', 'block')
+    .append('circle')
+    .attr('r', 4)
     .style('display', 'none')
-  
-  svg.append('rect')
+
+    var label = svg.append('text')
+    .style('display', 'none')
+
+    svg.append('rect')
     .attr('class', 'overlay')
     .attr('width', width)
     .attr('height', height)
@@ -147,18 +148,31 @@ d3.json('/api', function(error, reply) {
     })
     .on('mousemove', mousemove)
 
-  function mousemove () {
-    var x0 = x.invert(d3.mouse(this)[0])
-    var i = bisectDate(data, x0, 1)
-    var d0 = data[i - 1]
-    var d1 = data[i]
-    var d = x0 - d0.date > d1.date - x0 ? d1 : d0
+    function mousemove () {
+      var x0 = x.invert(d3.mouse(this)[0])
+      var i = bisectDate(data, x0, 1)
+      var d0 = data[i - 1]
+      var d1 = data[i]
+      var d = x0 - d0.date > d1.date - x0 ? d1 : d0
 
-    focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
-    svg.select('text')
-    .text(formatDate(d))
-    .attr('class', 'label')
-    .attr('dx', '2px')
-    .attr('dy', '50px')
+      focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
+      svg.select('text')
+      .text(formatDate(d))
+      .attr('class', 'label')
+      .attr('dx', '2px')
+      .attr('dy', '50px')
+    }
   }
+
+  drawGraph()
+
+  socket.on('data', function(reply) {
+    var formatDate = moment(reply.published_at).format('YYYYMMDDHHmm').toString()
+    data.push({
+      date: parseDate(formatDate),
+      temperature: +reply.temperature
+    })
+
+    drawGraph()
+  })
 })
