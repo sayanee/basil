@@ -155,8 +155,15 @@ function listen(url, channel) {
   }
 }
 
-io.on('connection', function (reply) {
-  sockets.push(reply)
+io.on('connection', function (socket) {
+  sockets.push(socket)
+
+  socket.on('disconnect', function() {
+    var i = sockets.indexOf(socket)
+    sockets.splice(i, 1)
+  })
+
+  logger.trace(`Total sockets: ${sockets.length}`)
 })
 
 listen(url(), CHANNEL_NAME)
