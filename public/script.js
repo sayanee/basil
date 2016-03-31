@@ -63,7 +63,7 @@ var height = 60 - margin.top - margin.bottom
 var parseDate = d3.time.format('%Y%m%d%H%S').parse
 var bisectDate = d3.bisector(function (d) { return d.date }).left
 var formatDate = function (d) {
-  return d.temperature + '°C on ' + moment(d.date).format('MMM DD, HH:mm[h]')
+  return d.temperature + '°C on ' + moment(d.published_at).format('MMM DD, HH:mm:ss[h]')
 }
 var x = d3.time.scale()
   .range([0, width])
@@ -92,7 +92,8 @@ d3.json('/api', function(error, reply) {
     if (!d.sample) {
       data.push({
         date: parseDate(formatDate),
-        temperature: +d.temperature
+        temperature: +d.temperature,
+        published_at: d.published_at
       })
     }
   })
