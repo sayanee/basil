@@ -83,16 +83,19 @@ var svg = d3.select('#graph')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 d3.json('/api', function(error, reply) {
-  if (error) throw error;
+  if (error) throw error
+
+  var data = []
 
   reply.data.forEach(function(d) {
     var formatDate = moment(d.published_at).format('YYYYMMDDHHmm').toString()
-
-    d.date = parseDate(formatDate)
-    d.temperature = +d.temperature
+    if (!d.sample) {
+      data.push({
+        date: parseDate(formatDate),
+        temperature: +d.temperature
+      })
+    }
   })
-
-  var data = reply.data
 
   x.domain([data[0].date, data[data.length - 1].date]);
   y.domain(d3.extent(data, function(d) { return d.temperature }))
