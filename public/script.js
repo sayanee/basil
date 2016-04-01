@@ -175,7 +175,7 @@ d3.json('/api', function(error, reply) {
     data.push({
       date: parseDate(formatDate),
       temperature: +reply.temperature,
-      published_at: d.published_at
+      published_at: reply.published_at
     })
 
     drawGraph()
