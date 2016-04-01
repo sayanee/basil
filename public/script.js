@@ -27,7 +27,7 @@ function addSampleDataStatus(sample) {
     if (sampleEl) {
       sampleEl.remove()
     }
-    return 
+    return
   }
 
   var sampleText = 'sample data!'
@@ -174,7 +174,8 @@ d3.json('/api', function(error, reply) {
     var formatDate = moment(reply.published_at).format('YYYYMMDDHHmm').toString()
     data.push({
       date: parseDate(formatDate),
-      temperature: +reply.temperature
+      temperature: +reply.temperature,
+      published_at: d.published_at
     })
 
     drawGraph()
