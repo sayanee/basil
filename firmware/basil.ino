@@ -15,7 +15,7 @@ void setup()
 {
   lipo.begin();
   lipo.quickStart();
-  lipo.setThreshold(20);
+  lipo.setThreshold(10);
 
   pinMode(TEMPERATURE_PIN, INPUT);
   pinMode(DEBUG_PIN, INPUT_PULLDOWN);
