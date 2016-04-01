@@ -21,13 +21,13 @@ html(lang="en")
           .status-left
             span(class="datetime", id="datetime", data-datetime="#{datetime}") #{datetime_relative}
             if need_charge
-              span.action.trigger
+              span.alert.trigger
                 include ./icon/plug.jade
             if need_water
-              span.action.trigger
+              span.alert.trigger
                 include ./icon/water.jade
             if success
-              span.action.success 
+              span.alert.success 
                 include ./icon/ok.jade
           .status-right
             p.account sayanee / basil
