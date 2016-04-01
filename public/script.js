@@ -56,7 +56,7 @@ socket.on('data', function(data) {
 
 window.setInterval(function() {
   datetimeEl.innerHTML = moment(datetimeEl.dataset.datetime).fromNow()
-}, 60000)
+}, 600000) // every 10 minutes
 
 // plot graph
 var margin = {top: 5, right: 5, bottom: 20, left: 5}
