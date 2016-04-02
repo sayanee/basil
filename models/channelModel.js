@@ -5,6 +5,8 @@ var timeline = require('../lib/timeline')
 var logger = require('../config/logger')
 var config = require('../config')
 var moment = require('moment-timezone')
+var twoWeeksAgo = moment().subtract('weeks', 2).format()
+var now = moment().format()
 
 class Channel {
   index(channel, callback) {
@@ -13,7 +15,11 @@ class Channel {
     db.child(channel + '/meta').once('value', function(snapshot) {
       list.meta = snapshot.val()
 
-      db.child(channel + '/data').once('value', function(snapshot) {
+      db.child(channel + '/data')
+      .orderByChild('published_at')
+      .startAt(twoWeeksAgo)
+      .endAt(now)
+      .once('value', function(snapshot) {
         list.data = snapshot.val() || {}
         if (!list.data[ 0 ] && list.data.length > 1) {
           list.data.shift()
