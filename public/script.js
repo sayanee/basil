@@ -138,6 +138,11 @@ function drawGraph(data) {
     var i = bisectDate(data, x0, 1)
     var d0 = data[i - 1]
     var d1 = data[i]
+
+    if (!d0 || !d1) {
+      return
+    }
+    
     var d = x0 - d0.date > d1.date - x0 ? d1 : d0
 
     focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
