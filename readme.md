@@ -80,6 +80,7 @@
     <td></td>
     <td>TOTAL</td>
     <td>USD $45.20</td>
+    <td>days 42</td>
     <td></td>
   </tr>
 </table>
