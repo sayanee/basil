@@ -15,7 +15,7 @@
   ```
 - Start the web server `npm start`
 
-  ![](img/web.png)
+  ![](img/ui.png)
 
 ## Wiring
 
