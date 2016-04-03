@@ -33,9 +33,10 @@ html(lang="en")
             p.account sayanee / basil
               span(id="battery" class="battery" data-charge="#{battery_status}")
                 span(class="helptext-battery")=soc
+              span.sample#sample sample data
             p#status !{status}
             if sample 
-              span#sample sample data!
+            
             .graph#graph
             
         li.status
@@ -44,7 +45,7 @@ html(lang="en")
           .status-right
             p.account hackerspacesg / cactus
               span(class="battery" data-charge="9")
-                span(class="helptext-battery") 90% left
+                span(class="helptext-battery") 90%
             p My temperature is <strong>28.8°C</strong>, battery voltage is <strong>4.2V</strong>
           
     script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js")   

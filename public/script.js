@@ -19,10 +19,9 @@ var statusEl = document.getElementById('status')
 var datetimeEl = document.getElementById('datetime')
 var socEl = document.getElementById('soc')
 var batteryEl = document.getElementById('battery')
+var sampleEl = document.getElementById('sample')
 
 function addSampleDataStatus(sample) {
-  var sampleEl = document.getElementById('sample')
-
   if (!sample) {
     if (sampleEl) {
       sampleEl.remove()
@@ -30,7 +29,7 @@ function addSampleDataStatus(sample) {
     return
   }
 
-  var sampleText = 'sample data!'
+  var sampleText = 'sample'
 
   if (sampleEl) {
     sampleEl.innerHTML = sampleText
@@ -65,8 +64,11 @@ var height = 60 - margin.top - margin.bottom
 
 var parseDate = d3.time.format('%Y%m%d%H%S').parse
 var bisectDate = d3.bisector(function (d) { return d.date }).left
-var formatDate = function (d) {
+var formatLabel = function (d) {
   return d.temperature + '°C on ' + moment(d.published_at).format('MMM DD, HH:mm:ss[h]')
+}
+var formatDate = function(publishedAt) {
+  return moment(publishedAt).format('YYYYMMDDHHmm').toString()
 }
 var x = d3.time.scale().range([0, width])
 var y = d3.scale.linear().range([height, 0])
@@ -142,12 +144,12 @@ function drawGraph(data) {
     if (!d0 || !d1) {
       return
     }
-    
-    var d = x0 - d0.date > d1.date - x0 ? d1 : d0
 
+    var d = x0 - d0.date > d1.date - x0 ? d1 : d0
+    
     focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
     svg.select('text')
-    .text(formatDate(d))
+    .text(formatLabel(d))
     .attr('class', 'label')
     .attr('dx', '2px')
     .attr('dy', '50px')
@@ -160,10 +162,10 @@ d3.json('/api', function(error, reply) {
   if (error) throw error
 
   reply.data.forEach(function(d) {
-    var formatDate = moment(d.published_at).format('YYYYMMDDHHmm').toString()
+
     if (!d.sample) {
       data.push({
-        date: parseDate(formatDate),
+        date: parseDate(formatDate(d.published_at)),
         temperature: +d.temperature,
         published_at: d.published_at
       })
@@ -173,9 +175,8 @@ d3.json('/api', function(error, reply) {
   drawGraph(data)
 
   socket.on('data', function(reply) {
-    var formatDate = moment(reply.published_at).format('YYYYMMDDHHmm').toString()
     data.push({
-      date: parseDate(formatDate),
+      date: parseDate(formatDate(reply.published_at)),
       temperature: +reply.temperature,
       published_at: reply.published_at
     })
