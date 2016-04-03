@@ -121,6 +121,8 @@ function storeDB(lastData) {
 
   sockets.forEach(function(eachSocket, index) {
     eachSocket.emit('data', {
+      temperature: lastData.temperature,
+      published_at: lastData.published_at,
       status: timeline.setStatus(lastData, CHANNEL_NAME),
       datetime: timeline.getPublishedDate(lastData.published_at),
       soc: timeline.getSOC(lastData.battery_state_of_charge, CHANNEL_NAME),
@@ -162,8 +164,6 @@ io.on('connection', function (socket) {
     var i = sockets.indexOf(socket)
     sockets.splice(i, 1)
   })
-
-  logger.trace(`Total sockets: ${sockets.length}`)
 })
 
 listen(url(), CHANNEL_NAME)
