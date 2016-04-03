@@ -32,6 +32,7 @@
     <th>Function</th>
     <th>Quantity</th>
     <th>Cost (USD)</th>
+    <th>Lead time (days)</th>
     <th>Buy</th>
   </tr>
   <tr>
@@ -39,6 +40,7 @@
     <td>Wifi + Microcontroller</td>
     <td>1</td>
     <td>19</td>
+    <td>14</td>
     <td><a href="https://store.particle.io/collections/photon">Particle.io</a></td>
   </tr>
   <tr>
@@ -46,6 +48,7 @@
     <td>fuel guage and Lithium polymer battery charger</td>
     <td>1</td>
     <td>12.95</td>
+    <td>21</td>  
     <td><a href="https://www.sparkfun.com/products/13626">Sparkfun</a></td>
   </tr>
   <tr>
@@ -53,6 +56,7 @@
     <td>to power the circuit and Photon</td>
     <td>1</td>
     <td>12.50</td>
+    <td>14</td>
     <td><a href="https://www.adafruit.com/products/2011">Adafruit</a></td>
   </tr>
   <tr>
@@ -60,6 +64,7 @@
     <td>Measure temperature</td>
     <td>1</td>
     <td>0.60</td>
+    <td>35</td>
     <td><a href="http://www.aliexpress.com/item/Free-Shipping-5pcs-LM35-LM35D-LM35DZ-TO-92-CENTIGRADE-TEMPERATURE-SENSOR-IC/900246222.html">Aliexpress</a></td>
   </tr>
   <tr>
@@ -67,6 +72,7 @@
     <td>On-off wakeup and debug</td>
     <td>1</td>
     <td>0.15</td>
+    <td>35</td>
     <td><a href="http://www.aliexpress.com/item/10-Pcs-Slide-Type-2-Row-4-Pin-Terminals-2-Positions-PCB-DIP-Switch/2038402574.html">Aliexpress</a></td>
   </tr>
   <tr>
