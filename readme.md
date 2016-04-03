@@ -32,42 +32,42 @@
     <th>Function</th>
     <th>Quantity</th>
     <th>Cost (USD)</th>
-    <th>Shop</th>
+    <th>Buy</th>
   </tr>
   <tr>
     <td>Particle Photon</td>
     <td>Wifi + Microcontroller</td>
     <td>1</td>
     <td>19</td>
-    <td><a href="https://store.particle.io/collections/photon">Shop</a></td>
+    <td><a href="https://store.particle.io/collections/photon">Particle.io</a></td>
   </tr>
   <tr>
     <td>SparkFun Photon battery shield</td>
     <td>fuel guage and Lithium polymer battery charger</td>
     <td>1</td>
     <td>12.95</td>
-    <td><a href="https://www.sparkfun.com/products/13626">Shop</a></td>
+    <td><a href="https://www.sparkfun.com/products/13626">Sparkfun</a></td>
   </tr>
   <tr>
     <td>Lithium polymer battery 2000mAh with JST connector and protection circuit</td>
     <td>to power the circuit and Photon</td>
     <td>1</td>
     <td>12.50</td>
-    <td><a href="https://www.adafruit.com/products/2011">Shop</a></td>
+    <td><a href="https://www.adafruit.com/products/2011">Adafruit</a></td>
   </tr>
   <tr>
     <td>LM35 Temperature sensor</td>
     <td>Measure temperature</td>
     <td>1</td>
     <td>0.60</td>
-    <td><a href="http://www.aliexpress.com/item/Free-Shipping-5pcs-LM35-LM35D-LM35DZ-TO-92-CENTIGRADE-TEMPERATURE-SENSOR-IC/900246222.html">Shop</a></td>
+    <td><a href="http://www.aliexpress.com/item/Free-Shipping-5pcs-LM35-LM35D-LM35DZ-TO-92-CENTIGRADE-TEMPERATURE-SENSOR-IC/900246222.html">Aliexpress</a></td>
   </tr>
   <tr>
     <td>Type 2 Row 4 pin DIP switch</td>
     <td>On-off wakeup and debug</td>
     <td>1</td>
     <td>0.15</td>
-    <td><a href="http://www.aliexpress.com/item/10-Pcs-Slide-Type-2-Row-4-Pin-Terminals-2-Positions-PCB-DIP-Switch/2038402574.html">Shop</a></td>
+    <td><a href="http://www.aliexpress.com/item/10-Pcs-Slide-Type-2-Row-4-Pin-Terminals-2-Positions-PCB-DIP-Switch/2038402574.html">Aliexpress</a></td>
   </tr>
   <tr>
     <td></td>
