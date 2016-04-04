@@ -33,10 +33,10 @@ html(lang="en")
             p.account sayanee / basil
               span(id="battery" class="battery" data-charge="#{battery_status}")
                 span(class="helptext-battery")=soc
-              span.sample#sample sample data
+              span.sample#sample 
+                if sample 
+                  sample data
             p#status !{status}
-            if sample 
-            
             .graph#graph
             
         li.status
