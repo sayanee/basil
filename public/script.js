@@ -146,7 +146,7 @@ function drawGraph(data) {
     }
 
     var d = x0 - d0.date > d1.date - x0 ? d1 : d0
-    
+
     focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
     svg.select('text')
     .text(formatLabel(d))
@@ -163,7 +163,7 @@ d3.json('/api', function(error, reply) {
 
   reply.data.forEach(function(d) {
 
-    if (!d.sample) {
+    if (d && !d.sample) {
       data.push({
         date: parseDate(formatDate(d.published_at)),
         temperature: +d.temperature,
