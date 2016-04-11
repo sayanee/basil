@@ -6,6 +6,7 @@ var logger = require('../config/logger')
 var config = require('../config')
 var moment = require('moment-timezone')
 var twoWeeksAgo = moment().subtract('weeks', 2).format()
+var _ = require('lodash')
 
 class Channel {
   index(channel, callback) {
@@ -18,10 +19,7 @@ class Channel {
       .orderByChild('published_at')
       .startAt(twoWeeksAgo)
       .once('value', function(snapshot) {
-        list.data = snapshot.val() || {}
-        if (!list.data[ 0 ] && list.data.length > 1) {
-          list.data.shift()
-        }
+        list.data = _.compact(snapshot.val()) || {}
         callback(list)
       })
     })
