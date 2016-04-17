@@ -40,7 +40,7 @@ api[ CHANNEL_NAME ] =  {
 
 app.use(express.static('public'))
 app.set('view engine', 'jade')
-app.use(morgan('log: \t:date[web] :method :url, :response-time ms, Status::status, Ref::referrer, Req header::req[header], Res header::res[header], Remote add::remote-addr, User agent::user-agent'))
+app.use(morgan('log: \t:date[web] :method :url, :response-time ms, Status::status, Ref::referrer, Req header::req[x-forwarded-for]'))
 
 function url() {
   return config.channels[ CHANNEL_NAME ].baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
