@@ -18,7 +18,6 @@ void setup()
   lipo.setThreshold(10);
 
   pinMode(TEMPERATURE_PIN, INPUT);
-  pinMode(DEBUG_PIN, INPUT_PULLDOWN);
   pinMode(WAKEUP_PIN, INPUT_PULLDOWN);
 
   WiFi.on();
@@ -31,7 +30,7 @@ void loop()
     if (digitalRead(WAKEUP_PIN) == LOW) {
       publishData(5000, false);
       System.sleep(WAKEUP_PIN, RISING, 14395); // 14400 seconds (4 hours) - 5 seconds
-    } else if (digitalRead(DEBUG_PIN) == HIGH) {
+    } else {
       publishData(10000, true);
     }
   }
