@@ -19,8 +19,7 @@
 
 ## Wiring
 
-- Turn on DIP `Switch 1` to wakeup - for flashing firmware
-- Turn on DIP `Switch 1` and `Switch 2` for debug mode - for getting analog value every 5 seconds (instead of every hour)
+- Turn `ON` the slider switch to wake up and ping samples from the sensor every `10 seconds`
 
 ![](hardware/basil.jpg)
 
@@ -68,35 +67,19 @@
     <td><a href="http://www.aliexpress.com/item/Free-Shipping-5pcs-LM35-LM35D-LM35DZ-TO-92-CENTIGRADE-TEMPERATURE-SENSOR-IC/900246222.html">Aliexpress</a></td>
   </tr>
   <tr>
-    <td>Type 2 Row 4 pin DIP switch</td>
-    <td>On-off wakeup and debug</td>
+    <td>Slide switch</td>
+    <td>On-off wakeup and samples</td>
     <td>1</td>
-    <td>0.15</td>
-    <td>35</td>
-    <td><a href="http://www.aliexpress.com/item/10-Pcs-Slide-Type-2-Row-4-Pin-Terminals-2-Positions-PCB-DIP-Switch/2038402574.html">Aliexpress</a></td>
+    <td>0.906</td>
+    <td>28</td>
+    <td><a href="http://sg.element14.com/webapp/wcs/stores/servlet/ProductDisplay?catalogId=15001&langId=65&urlRequestType=Base&partNumber=1905334&storeId=10191">element14</a></td>
   </tr>
   <tr>
     <td></td>
     <td></td>
     <td>TOTAL</td>
-    <td>USD $45.20</td>
+    <td>USD $45.96</td>
     <td>days 42</td>
     <td></td>
   </tr>
 </table>
-
-
-
-## Research
-
-### Sensors
-
-1. [SparkFun](https://www.sparkfun.com/products/13322)
-- [Grove](http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor)
-- [Cheap soil moisture sensor](http://gardenbot.org/howTo/soilMoisture/)
-
-### Similar projects
-
-1. [Instructables](http://www.instructables.com/id/Soil-Moisture-Sensor/)
-- [Hackster](https://www.hackster.io/search?q=soil+moisture)
-- [House plant monitor](https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-photon-experiment-guide/experiment-3-houseplant-monitor)
