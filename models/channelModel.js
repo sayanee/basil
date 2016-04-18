@@ -8,6 +8,10 @@ var moment = require('moment-timezone')
 var twoWeeksAgo = moment().subtract('weeks', 2).format()
 var _ = require('lodash')
 
+function isMoreThan2WeeksOld(value) {
+  return moment().diff(value.published_at, 'days') < 15
+}
+
 class Channel {
   index(channel, callback) {
     var list = {}
@@ -17,9 +21,8 @@ class Channel {
 
       db.child(channel + '/data')
       .orderByChild('published_at')
-      .startAt(twoWeeksAgo)
       .once('value', function(snapshot) {
-        list.data = _.compact(snapshot.val()) || {}
+        list.data = _.compact(snapshot.val().filter(isMoreThan2WeeksOld)) || {}
         callback(list)
       })
     })
