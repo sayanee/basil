@@ -1,8 +1,8 @@
 #include "SparkFunMAX17043.h"
 
-#define TEMPERATURE_PIN A0
+#define MOISTURE_ANALOG_PIN A0
+#define MOISTURE_VCC_PIN D4
 #define WAKEUP_PIN WKP
-#define DEBUG_PIN D2
 
 int analog = 0;
 double voltage = 0;
@@ -17,7 +17,8 @@ void setup()
   lipo.quickStart();
   lipo.setThreshold(10);
 
-  pinMode(TEMPERATURE_PIN, INPUT);
+  pinMode(MOISTURE_VCC_PIN, OUTPUT);
+  pinMode(MOISTURE_ANALOG_PIN, INPUT);
   pinMode(WAKEUP_PIN, INPUT_PULLDOWN);
 
   WiFi.on();
@@ -36,17 +37,18 @@ void loop()
   }
 }
 
-void publishData(int delayTime, bool debugMode) {
+void publishData(int delayTime, bool sampleMode) {
   int countAverageNum = 9;
 
-  analog = analogRead(TEMPERATURE_PIN);
+  digitalWrite(MOISTURE_VCC_PIN, HIGH);
+  analog = analogRead(MOISTURE_ANALOG_PIN);
   voltage = lipo.getVoltage();
   soc = lipo.getSOC();
   alert = lipo.getAlert();
 
-  if (!debugMode) {
+  if (!sampleMode) {
     while (countAverageNum > 0) {
-      analog += analogRead(TEMPERATURE_PIN);
+      analog += analogRead(MOISTURE_ANALOG_PIN);
       countAverageNum = countAverageNum - 1;
       delay(10);
     }
@@ -60,4 +62,5 @@ void publishData(int delayTime, bool debugMode) {
 
   Particle.publish("basil", analogStr);
   delay(delayTime);
+  digitalWrite(MOISTURE_VCC_PIN, LOW);
 }
