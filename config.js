@@ -3,7 +3,6 @@ module.exports = {
     "utc": "+0800",
     "timezone": "Asia/Singapore",
     "measurements": {
-      "temperature": "°C",
       "soil_moisture": "%",
       "battery_voltage": "V",
       "battery_state_of_charge": "%",

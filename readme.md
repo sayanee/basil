@@ -59,14 +59,6 @@
     <td><a href="https://www.adafruit.com/products/2011">Adafruit</a></td>
   </tr>
   <tr>
-    <td>LM35 Temperature sensor</td>
-    <td>Measure temperature</td>
-    <td>1</td>
-    <td>0.60</td>
-    <td>35</td>
-    <td><a href="http://www.aliexpress.com/item/Free-Shipping-5pcs-LM35-LM35D-LM35DZ-TO-92-CENTIGRADE-TEMPERATURE-SENSOR-IC/900246222.html">Aliexpress</a></td>
-  </tr>
-  <tr>
     <td>Slide switch</td>
     <td>On-off wakeup and samples</td>
     <td>1</td>
@@ -78,7 +70,7 @@
     <td></td>
     <td></td>
     <td>TOTAL</td>
-    <td>USD $45.96</td>
+    <td>USD $45.36</td>
     <td>days 42</td>
     <td></td>
   </tr>

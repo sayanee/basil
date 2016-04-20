@@ -65,7 +65,7 @@ var height = 60 - margin.top - margin.bottom
 var parseDate = d3.time.format('%Y%m%d%H%S').parse
 var bisectDate = d3.bisector(function (d) { return d.date }).left
 var formatLabel = function (d) {
-  return d.temperature + '°C on ' + moment(d.published_at).format('MMM DD, HH:mm:ss[h]')
+  return d.soil_moisture + '% on ' + moment(d.published_at).format('MMM DD, HH:mm:ss[h]')
 }
 var formatDate = function(publishedAt) {
   return moment(publishedAt).format('YYYYMMDDHHmm').toString()
@@ -76,7 +76,7 @@ var y = d3.scale.linear().range([height, 0])
 var line = d3.svg.line()
   .interpolate('basis')
   .x(function(d) { return x(d.date) })
-  .y(function(d) { return y(d.temperature) })
+  .y(function(d) { return y(d.soil_moisture) })
 
 var svg = d3.select('#graph')
   .append('svg')
@@ -86,7 +86,7 @@ var svg = d3.select('#graph')
 
 function drawGraph(data) {
   x.domain([data[0].date, data[data.length - 1].date]);
-  y.domain(d3.extent(data, function(d) { return d.temperature }))
+  y.domain(d3.extent(data, function(d) { return d.soil_moisture }))
 
   var limit = y(29)
 
@@ -147,7 +147,7 @@ function drawGraph(data) {
 
     var d = x0 - d0.date > d1.date - x0 ? d1 : d0
 
-    focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.temperature)  + ')')
+    focus.attr('transform', 'translate(' + x(d.date) + ',' + y(d.soil_moisture)  + ')')
     svg.select('text')
     .text(formatLabel(d))
     .attr('class', 'label')
@@ -166,7 +166,7 @@ d3.json('/api', function(error, reply) {
     if (d && !d.sample) {
       data.push({
         date: parseDate(formatDate(d.published_at)),
-        temperature: +d.temperature,
+        soil_moisture: +d.soil_moisture,
         published_at: d.published_at
       })
     }
@@ -177,7 +177,7 @@ d3.json('/api', function(error, reply) {
   socket.on('data', function(reply) {
     data.push({
       date: parseDate(formatDate(reply.published_at)),
-      temperature: +reply.temperature,
+      soil_moisture: +reply.soil_moisture,
       published_at: reply.published_at
     })
 

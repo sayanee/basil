@@ -55,9 +55,9 @@ void publishData(int delayTime, bool sampleMode) {
 
     analog = analog / 10;
 
-    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
+    sprintf(analogStr, "{\"soil_moisture\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
   } else {
-    sprintf(analogStr, "{\"temperature\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"sample\":true}", analog, voltage, soc, alert);
+    sprintf(analogStr, "{\"soil_moisture\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"sample\":true}", analog, voltage, soc, alert);
   }
 
   Particle.publish("basil", analogStr);

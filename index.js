@@ -30,7 +30,7 @@ var api = {}
 api[ CHANNEL_NAME ] =  {
   meta: {
     name: 'basil',
-    description: 'measure soil moisture and temperature for a basil plant',
+    description: 'measure soil moisture for plants',
     timezone: config.meta.timezone,
     utc: config.meta.utc,
     measurements: config.meta.measurements,
@@ -46,8 +46,8 @@ function url() {
   return config.channels[ CHANNEL_NAME ].baseUrl + process.env.DEVICE_ID + '/events?access_token=' + process.env.ACCESS_TOKEN
 }
 
-function normaliseTemperature(value) {
-  return formatOneDecimalPlace((value / 4096 * 3.3) * 100)
+function normaliseSoilMoisture(value) {
+  return formatOneDecimalPlace((value + 1) / 4096 * 100)
 }
 
 function formatOneDecimalPlace(value) {
@@ -63,7 +63,7 @@ function getSensorValues(sample, sensor) {
     var randomSubstract = Math.round((Math.random() * 11 + 1)/10)
     return {
       published_at: currentDatetimeISO(),
-      temperature: 29.4 - randomSubstract,
+      soil_moisture: 29.4 - randomSubstract,
       battery_voltage: 4.2,
       battery_state_of_charge: 100,
       battery_alert: false,
@@ -76,7 +76,7 @@ function getSensorValues(sample, sensor) {
 
   var json = {
     published_at: moment(payload.published_at).toISOString(),
-    temperature: normaliseTemperature(data.temperature),
+    soil_moisture: normaliseSoilMoisture(data.soil_moisture),
     battery_voltage: formatOneDecimalPlace(data.voltage),
     battery_state_of_charge: formatOneDecimalPlace(data.soc),
     battery_alert: data.alert ? true : false
@@ -91,7 +91,7 @@ function getSensorValues(sample, sensor) {
 }
 
 function logData(data, channel) {
-  var log = `${CHANNEL_NAME} update - Temperature: ${data.temperature}${config.meta.measurements.temperature}\tVoltage: ${data.battery_voltage}${config.meta.measurements.battery_voltage}\tSOC: ${data.battery_state_of_charge}${config.meta.measurements.battery_state_of_charge} \tBatt alert: ${data.battery_alert}`
+  var log = `Channel: ${CHANNEL_NAME} - Moisture: ${data.soil_moisture}${config.meta.measurements.soil_moisture}\tState of Charge: ${data.battery_state_of_charge}${config.meta.measurements.battery_state_of_charge}`
 
   data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
@@ -102,7 +102,7 @@ function storeDB(lastData) {
 
     db.child(CHANNEL_NAME + '/data/' + lastDataID).once('value', function(snapshot) {
       if (lastData.published_at !== snapshot.val().published_at
-        && lastData.temperature !== snapshot.val().temperature) {
+        && lastData.soil_moisture !== snapshot.val().soil_moisture) {
 
         lastDataID += 1
         lastData.id = lastDataID
@@ -121,7 +121,7 @@ function storeDB(lastData) {
 
   sockets.forEach(function(eachSocket, index) {
     eachSocket.emit('data', {
-      temperature: lastData.temperature,
+      soil_moisture: lastData.soil_moisture,
       published_at: lastData.published_at,
       status: timeline.setStatus(lastData, CHANNEL_NAME),
       datetime: timeline.getPublishedDate(lastData.published_at),
