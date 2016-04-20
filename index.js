@@ -96,27 +96,37 @@ function logData(data, channel) {
   data.sample ? logger.info(log + '\tSample: yes') : logger.info(log)
 }
 
+function addNewData(lastDataID, lastData) {
+  lastDataID += 1
+  lastData.id = lastDataID
+
+  db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
+    if (error) {
+      logger.error(error)
+    } else {
+      db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
+      db.child(CHANNEL_NAME + '/meta/published_at').set(currentDatetimeISO())
+    }
+  })
+}
+
+function checkLastData(lastData, dbValue) {
+  return lastData.published_at !== dbValue.published_at && lastData.soil_moisture !== dbValue.soil_moisture
+}
+
 function storeDB(lastData) {
   db.child(CHANNEL_NAME + '/meta/last_data_id').once('value', function(snapshot) {
     var lastDataID = snapshot.val()
 
-    db.child(CHANNEL_NAME + '/data/' + lastDataID).once('value', function(snapshot) {
-      if (lastData.published_at !== snapshot.val().published_at
-        && lastData.soil_moisture !== snapshot.val().soil_moisture) {
-
-        lastDataID += 1
-        lastData.id = lastDataID
-
-        db.child(CHANNEL_NAME + '/data/' + lastDataID).set(lastData, function(error) {
-          if (error) {
-            logger.error(error)
-          } else {
-            db.child(CHANNEL_NAME + '/meta/last_data_id').set(lastDataID)
-            db.child(CHANNEL_NAME + '/meta/published_at').set(currentDatetimeISO())
-          }
-        })
-      }
-    })
+    if (lastDataID == '0') {
+      addNewData(lastDataID, lastData)
+    } else {
+      db.child(CHANNEL_NAME + '/data/' + lastDataID).once('value', function(snapshot) {
+        if (checkLastData(lastData, snapshot.val())) {
+          addNewData(lastDataID, lastData)
+        }
+      })
+    }
   })
 
   sockets.forEach(function(eachSocket, index) {

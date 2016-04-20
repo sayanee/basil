@@ -74,21 +74,21 @@ var x = d3.time.scale().range([0, width])
 var y = d3.scale.linear().range([height, 0])
 
 var line = d3.svg.line()
-  .interpolate('basis')
-  .x(function(d) { return x(d.date) })
-  .y(function(d) { return y(d.soil_moisture) })
+.interpolate('basis')
+.x(function(d) { return x(d.date) })
+.y(function(d) { return y(d.soil_moisture) })
 
 var svg = d3.select('#graph')
-  .append('svg')
-  .attr('viewBox', '0 0 ' + (width + margin.left + margin.right) + ' ' + (height + margin.top + margin.bottom))
-  .append('g')
-  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+.append('svg')
+.attr('viewBox', '0 0 ' + (width + margin.left + margin.right) + ' ' + (height + margin.top + margin.bottom))
+.append('g')
+.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 function drawGraph(data) {
   x.domain([data[0].date, data[data.length - 1].date]);
   y.domain(d3.extent(data, function(d) { return d.soil_moisture }))
 
-  var limit = y(29)
+  var limit = y(45)
 
   svg.append('clipPath')
   .attr('id', 'clip-above')
@@ -160,9 +160,8 @@ var data = []
 
 d3.json('/api', function(error, reply) {
   if (error) throw error
-
+  console.log(reply.data)
   reply.data.forEach(function(d) {
-
     if (d && !d.sample) {
       data.push({
         date: parseDate(formatDate(d.published_at)),
@@ -172,6 +171,7 @@ d3.json('/api', function(error, reply) {
     }
   })
 
+  console.log(data)
   drawGraph(data)
 
   socket.on('data', function(reply) {
