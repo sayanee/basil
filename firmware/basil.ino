@@ -18,7 +18,7 @@ void setup()
   lipo.setThreshold(10);
 
   pinMode(MOISTURE_VCC_PIN, OUTPUT);
-  pinMode(MOISTURE_ANALOG_PIN, INPUT);
+  pinMode(MOISTURE_ANALOG_PIN, INPUT_PULLDOWN);
   pinMode(WAKEUP_PIN, INPUT_PULLDOWN);
 
   WiFi.on();
@@ -28,10 +28,10 @@ void setup()
 void loop()
 {
   if (Particle.connected()) {
-    if (digitalRead(WAKEUP_PIN) == LOW) {
+    if (digitalRead(WAKEUP_PIN) == LOW) { // if the sensor woke up because of timer interrupt
       publishData(5000, false);
       System.sleep(WAKEUP_PIN, RISING, 14395); // 14400 seconds (4 hours) - 5 seconds
-    } else {
+    } else { // else the sensor is woken up by slide switch manually
       publishData(10000, true);
     }
   }
@@ -41,20 +41,22 @@ void publishData(int delayTime, bool sampleMode) {
   int countAverageNum = 9;
 
   digitalWrite(MOISTURE_VCC_PIN, HIGH);
-  analog = analogRead(MOISTURE_ANALOG_PIN);
+  delay(50); // stabilise the voltage
+  analog = 0; // initialise sensor value
+
   voltage = lipo.getVoltage();
   soc = lipo.getSOC();
   alert = lipo.getAlert();
 
+  for(int count = 0; count < 10; count++) {
+    analog += analogRead(MOISTURE_ANALOG_PIN);
+    delay(10);
+  }
+
+  analog = analog / 10;
+  digitalWrite(MOISTURE_VCC_PIN, LOW);
+
   if (!sampleMode) {
-    while (countAverageNum > 0) {
-      analog += analogRead(MOISTURE_ANALOG_PIN);
-      countAverageNum = countAverageNum - 1;
-      delay(10);
-    }
-
-    analog = analog / 10;
-
     sprintf(analogStr, "{\"soil_moisture\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d}", analog, voltage, soc, alert);
   } else {
     sprintf(analogStr, "{\"soil_moisture\": %d,\"voltage\":%f,\"soc\":%f,\"alert\":%d,\"sample\":true}", analog, voltage, soc, alert);
@@ -62,5 +64,4 @@ void publishData(int delayTime, bool sampleMode) {
 
   Particle.publish("basil", analogStr);
   delay(delayTime);
-  digitalWrite(MOISTURE_VCC_PIN, LOW);
 }

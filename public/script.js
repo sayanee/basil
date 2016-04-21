@@ -171,6 +171,7 @@ d3.json('/api', function(error, reply) {
     }
   })
 
+
   drawGraph(data)
 
   socket.on('data', function(reply) {
