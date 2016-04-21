@@ -160,7 +160,7 @@ var data = []
 
 d3.json('/api', function(error, reply) {
   if (error) throw error
-  console.log(reply.data)
+
   reply.data.forEach(function(d) {
     if (d && !d.sample) {
       data.push({
@@ -171,7 +171,6 @@ d3.json('/api', function(error, reply) {
     }
   })
 
-  console.log(data)
   drawGraph(data)
 
   socket.on('data', function(reply) {
