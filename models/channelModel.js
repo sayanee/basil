@@ -22,7 +22,12 @@ class Channel {
       db.child(channel + '/data')
       .orderByChild('published_at')
       .once('value', function(snapshot) {
-        list.data = _.compact(snapshot.val().filter(isMoreThan2WeeksOld)) || {}
+        if (snapshot.val().length < 1) {
+          list.data = []
+        } else {
+          list.data = _.compact(snapshot.val().filter(isMoreThan2WeeksOld)) || {}
+        }
+
         callback(list)
       })
     })
