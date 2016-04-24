@@ -22,7 +22,7 @@ class Channel {
       db.child(channel + '/data')
       .orderByChild('published_at')
       .once('value', function(snapshot) {
-        if (snapshot.val().length < 1) {
+        if (!snapshot.val()) {
           list.data = []
         } else {
           list.data = _.compact(snapshot.val().filter(isMoreThan2WeeksOld)) || {}
@@ -45,12 +45,9 @@ class Channel {
 
         if (!lastData) {
           var initialMessage = 'Waiting for the first data!'
+
           return callback({
-            status: initialMessage,
-            datetime: timeline.getPublishedDate(),
-            datetime_relative: initialMessage,
-            soc: initialMessage,
-            battery_status: initialMessage
+            status: initialMessage
           })
         }
 
