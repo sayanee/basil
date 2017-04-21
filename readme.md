@@ -1,77 +1,21 @@
-![](img/pic.jpg)
+# basil
 
-# Soil moisture sensor [[demo](http://basil.sayan.ee) and [api](http://basil.sayan.ee/api)]
+> Capacitive soil moisture sensor
 
-> Monitoring soil moisture sensor of a basil plant to remind the owner to water it!
+## References
 
-## Quick start
+### Capacitive sensing
 
-1. Wire up the [soil moisture sensor](http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor) with [Particle Photon](https://store.particle.io/collections/photon) and flash it with the [firmware](firmware)
-1. Install packages and set environment variables
-
-  ```sh
-  npm i
-  cp .env.sample .env # set the device id and access token for the Particle Photon
-  ```
-- Start the web server `npm start`
-
-  ![](img/ui.png)
-
-## Wiring
-
-- Turn `ON` the slider switch to wake up and ping samples from the sensor every `10 seconds`
-
-![](hardware/basil.jpg)
-
-## Bill of Materials
-
-<table>
-  <tr>
-    <th>Part</th>
-    <th>Function</th>
-    <th>Quantity</th>
-    <th>Cost (USD)</th>
-    <th>Lead time (days)</th>
-    <th>Buy</th>
-  </tr>
-  <tr>
-    <td>Particle Photon</td>
-    <td>Wifi + Microcontroller</td>
-    <td>1</td>
-    <td>19</td>
-    <td>14</td>
-    <td><a href="https://store.particle.io/collections/photon">Particle.io</a></td>
-  </tr>
-  <tr>
-    <td>SparkFun Photon battery shield</td>
-    <td>fuel guage and Lithium polymer battery charger</td>
-    <td>1</td>
-    <td>12.95</td>
-    <td>21</td>  
-    <td><a href="https://www.sparkfun.com/products/13626">Sparkfun</a></td>
-  </tr>
-  <tr>
-    <td>Lithium polymer battery 2000mAh with JST connector and protection circuit</td>
-    <td>to power the circuit and Photon</td>
-    <td>1</td>
-    <td>12.50</td>
-    <td>14</td>
-    <td><a href="https://www.adafruit.com/products/2011">Adafruit</a></td>
-  </tr>
-  <tr>
-    <td>Slide switch</td>
-    <td>On-off wakeup and samples</td>
-    <td>1</td>
-    <td>0.906</td>
-    <td>28</td>
-    <td><a href="http://sg.element14.com/webapp/wcs/stores/servlet/ProductDisplay?catalogId=15001&langId=65&urlRequestType=Base&partNumber=1905334&storeId=10191">element14</a></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td>TOTAL</td>
-    <td>USD $45.36</td>
-    <td>days 42</td>
-    <td></td>
-  </tr>
-</table>
+1. [Capacitive Soil Moisture Sensor SKU:SEN0193](https://www.dfrobot.com/wiki/index.php/Capacitive_Soil_Moisture_Sensor_SKU:SEN0193)
+1. [A cheap capacitive soil moisture sensor](https://hackaday.io/project/12813-a-cheap-capacitive-soil-moisture-sensor)
+1. [Capacitive Soil Moisture Measuring (with I2C)](http://www.instructables.com/id/Capacitive-Soil-Moisture-Measuring/)
+1. [How do you measure soil moisture using a capacitive sensor?](https://electronics.stackexchange.com/questions/184845/how-do-you-measure-soil-moisture-using-a-capacitive-sensor)
+1. Lucky Resister
+  - [How to design a cheap plant watering sensor (Part 1)](https://luckyresistor.me/2017/02/08/how-to-design-a-cheap-plant-watering-sensor-part-1/)
+  - [How to design a cheap plant watering sensor (Part 2)](https://luckyresistor.me/2017/02/14/how-to-design-a-cheap-plant-watering-sensor-part-2/)
+  - [How to design a cheap plant watering sensor (Part 3)](https://luckyresistor.me/2017/03/03/how-to-design-a-cheap-plant-watering-sensor-part-3/)
+  - [How to design a cheap plant watering sensor (Part 4)](https://luckyresistor.me/2017/03/04/how-to-design-a-cheap-plant-watering-sensor-part-4/)
+  - [How to design a cheap plant watering sensor (Part 5)](https://luckyresistor.me/2017/03/09/how-to-design-a-cheap-plant-watering-sensor-part-5/)
+  - [Plant Watering Sensor Foot Parts from Eurocircuits](https://luckyresistor.me/2017/03/28/plant-watering-sensor-foot-parts-from-eurocircuits/)
+  - [No success with first long term measurement](https://luckyresistor.me/2017/03/26/no-success-with-first-long-term-measurement/)
+  - [Plant Watering Sensor - Long Term Logging](https://luckyresistor.me/2017/03/14/plant-watering-sensor-long-term-logging/)
