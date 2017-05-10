@@ -11,6 +11,7 @@
 1. [Capacitive Soil Moisture Measuring (with I2C)](http://www.instructables.com/id/Capacitive-Soil-Moisture-Measuring/)
 1. [How do you measure soil moisture using a capacitive sensor?](https://electronics.stackexchange.com/questions/184845/how-do-you-measure-soil-moisture-using-a-capacitive-sensor)
 1. [Chirp - capacitive soil moisture sensor based on ATTINY44](https://github.com/Miceuz/PlantWateringAlarm)
+    - [I2C moisture sensor](https://github.com/Miceuz/i2c-moisture-sensor)
 1. Lucky Resister
     - [How to design a cheap plant watering sensor (Part 1)](https://luckyresistor.me/2017/02/08/how-to-design-a-cheap-plant-watering-sensor-part-1/)
     - [How to design a cheap plant watering sensor (Part 2)](https://luckyresistor.me/2017/02/14/how-to-design-a-cheap-plant-watering-sensor-part-2/)
